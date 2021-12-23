@@ -33,4 +33,4 @@ jobs:
 
       - name: Deploy to AWS
         run: yarn build
-        run: aws s3 sync build/ s3://rafaelsdias.dev --acl public-read
+        run: yarn deploy

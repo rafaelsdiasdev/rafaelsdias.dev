@@ -31,6 +31,8 @@ jobs:
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
 
-      - name: Deploy to AWS
+      - name: Build
         run: react-scripts build
+
+      - name: Deploy to AWS
         run: aws s3 sync build/ s3://rafaelsdias.dev --acl public-read

@@ -30,8 +30,6 @@ jobs:
 
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
-
-      - name: Build
         run: react-scripts build
 
       - name: Deploy to AWS

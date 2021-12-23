@@ -30,7 +30,7 @@ jobs:
 
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
+        run: yarn build
 
       - name: Deploy to AWS
-        run: yarn build
-        run: yarn deploy
+        run: yarn

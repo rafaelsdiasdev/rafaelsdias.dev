@@ -32,7 +32,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: Build
-        run: react-scripts build
+        run: npm run build
 
       - name: Deploy to AWS
-        run: aws s3 sync build/ s3://rafaelsdias.dev --acl public-read
+        run: npm run deploy

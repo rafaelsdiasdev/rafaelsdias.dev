@@ -1,7 +1,6 @@
 name: Deploy to AWS
 
 on:
-  workflow_dispatch:
   push:
     tags:
       - 'v1'

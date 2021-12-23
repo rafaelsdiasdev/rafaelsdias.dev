@@ -38,7 +38,7 @@ const Home = () => {
           </li>
           <li className={styles.list__item}>
             <p className={styles.item__paragraph}>Phone</p>
-            <p className={styles.item__paragraph}>(98) 98127-8401</p>
+            <p className={styles.item__paragraph}>(98) 981278401</p>
           </li>
           <li className={styles.list__item}>
             <p className={styles.item__paragraph}>Email</p>

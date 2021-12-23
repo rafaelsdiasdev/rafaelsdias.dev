@@ -2,8 +2,8 @@ name: Deploy to AWS
 
 on:
   push:
-    tags:
-      - 'v1'
+    branches:
+      - master
 
 jobs:
   deploy-prod:

@@ -1,0 +1,8 @@
+spotifyClone:
+  component: '@sls-next/serverless-component'
+  inputs:
+    domain: ['rafaelsdias.dev']
+    build:
+      env:
+        SPOTIFY_CLIENT_ID: ${env.SPOTIFY_CLIENT_ID}
+        SPOTIFY_CLIENT_SECRET: ${env.SPOTIFY_CLIENT_SECRET}

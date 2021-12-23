@@ -1,0 +1,38 @@
+name: Deploy to AWS
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v1'
+
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.0]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+
+      - name: Build
+        yarn: build
+
+      - name: Deploy to AWS
+        run: npx serverless

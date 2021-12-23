@@ -17,10 +17,15 @@ const Projects = () => {
             <a
               href="https://github.com/rafaelsdiasdev/spotify-clone"
               target="_blank"
+              rel="noreferrer"
             >
               <GithubIcon width="20px" height="20px" fill="#fff" />
             </a>
-            <a href="https://spotify/rafaelsdias.dev" target="_blank">
+            <a
+              href="https://spotify/rafaelsdias.dev"
+              target="_blank"
+              rel="noreferrer"
+            >
               <Pin width="20px" height="20px" fill="#fff" />
             </a>
           </div>
@@ -35,12 +40,14 @@ const Projects = () => {
             <a
               href="https://github.com/rafaelsdiasdev/Space-Invader-Clone"
               target="_blank"
+              rel="noreferrer"
             >
               <GithubIcon width="20px" height="20px" fill="#fff" />
             </a>
             <a
               href="https://rafaelsdiasdev.github.io/Space-Invader-Clone/"
               target="_blank"
+              rel="noreferrer"
             >
               <Pin width="20px" height="20px" fill="#fff" />
             </a>
@@ -58,10 +65,15 @@ const Projects = () => {
             <a
               href="https://github.com/rafaelsdiasdev/find-coffee-books"
               target="_blank"
+              rel="noreferrer"
             >
               <GithubIcon width="20px" height="20px" fill="#fff" />
             </a>
-            <a href="http://find-coffee-books.herokuapp.com/" target="_blank">
+            <a
+              href="http://find-coffee-books.herokuapp.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
               <Pin width="20px" height="20px" fill="#fff" />
             </a>
           </div>
@@ -76,12 +88,14 @@ const Projects = () => {
             <a
               href="https://github.com/rafaelsdiasdev/iron-nutrition"
               target="_blank"
+              rel="noreferrer"
             >
               <GithubIcon width="20px" height="20px" fill="#fff" />
             </a>
             <a
               href="https://rafaelsdiasdev.github.io/iron-nutrition/"
               target="_blank"
+              rel="noreferrer"
             >
               <Pin width="20px" height="20px" fill="#fff" />
             </a>
@@ -94,10 +108,14 @@ const Projects = () => {
             used: Express, HBS, MongoGB, JS, Node.
           </p>
           <div className={styles.social}>
-            <a href="#" target="_blank">
+            <a href="#" target="_blank" rel="noreferrer">
               <GithubIcon width="20px" height="20px" fill="#fff" />
             </a>
-            <a href="http://grupo-4.herokuapp.com/" target="_blank">
+            <a
+              href="http://grupo-4.herokuapp.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
               <Pin width="20px" height="20px" fill="#fff" />
             </a>
           </div>

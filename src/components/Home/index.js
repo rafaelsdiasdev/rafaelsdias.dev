@@ -23,7 +23,7 @@ const Home = () => {
             </div>
           </div>
           <div className={styles.social}>
-            <a href="">
+            <a href="https://www.linkedin.com/in/rafaelsdiasdev/">
               <LinkedinIcon width="56px" height="56px" fill="#fff" />
             </a>
             <a href="https://github.com/rafaelsdiasdev">

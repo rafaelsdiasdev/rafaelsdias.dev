@@ -108,7 +108,7 @@ const Projects = () => {
             used: Express, HBS, MongoGB, JS, Node.
           </p>
           <div className={styles.social}>
-            <a href="#" target="_blank" rel="noreferrer">
+            <a href="https://rafaelsdias.dev" target="_blank" rel="noreferrer">
               <GithubIcon width="20px" height="20px" fill="#fff" />
             </a>
             <a

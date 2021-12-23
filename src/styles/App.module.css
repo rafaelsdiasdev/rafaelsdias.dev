@@ -1,0 +1,11 @@
+/* .pageWrapper {
+	height: 100vh;
+}
+
+.pages {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+  scroll-snap-type: y mandatory;
+} */
+

@@ -1,10 +1,11 @@
+import './styles/global.module.css';
+import styles from './styles/App.module.css';
+import Pages from './components/Pages'
 
 function App() {
   return (
-    <div className="App">
-      <header>
-        <h2>rafaelsdias.dev v0.3</h2>
-      </header>
+    <div className={`App ${styles.pageWrapper}`}>
+      <Pages style={styles.pages} />
     </div>
   );
 }

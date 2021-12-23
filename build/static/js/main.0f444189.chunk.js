@@ -1,2 +1,0 @@
-(this.webpackJsonprafaelsdias=this.webpackJsonprafaelsdias||[]).push([[0],{9:function(e,s,a){"use strict";a.r(s);var r=a(1),t=a.n(r),c=a(3),n=a.n(c),d=a(0);var i=function(){return Object(d.jsx)("div",{className:"App",children:Object(d.jsx)("header",{children:Object(d.jsx)("h2",{children:"rafaelsdias.dev v0.3"})})})};n.a.render(Object(d.jsx)(t.a.StrictMode,{children:Object(d.jsx)(i,{})}),document.getElementById("root"))}},[[9,1,2]]]);
-//# sourceMappingURL=main.0f444189.chunk.js.map

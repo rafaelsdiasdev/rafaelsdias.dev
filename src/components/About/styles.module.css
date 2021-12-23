@@ -1,0 +1,33 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 60%;
+  padding: 0 3rem;
+  align-items: center;
+  height: 100%;
+}
+
+.title {
+  color: var(--secondary-color);
+  font-size: 3rem;
+}
+
+.paragraph {
+  width: 90%;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+@media (max-width:1000px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    padding: 0 2.5rem;
+    align-items: flex-start;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+}

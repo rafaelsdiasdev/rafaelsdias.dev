@@ -5,7 +5,9 @@ import styles from './styles.module.css';
 const Projects = () => {
   return (
     <div className={styles.container}>
+      <a href="https://github.com/rafaelsdiasdev/spotify-clone"></a>
       <h1 className={styles.title}>Projects</h1>
+      <a />
       <ul className={styles.list}>
         <li className={styles.list__item}>
           <h2 className={styles.item__title}>Spotify Clone</h2>

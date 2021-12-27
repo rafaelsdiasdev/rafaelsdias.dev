@@ -111,7 +111,7 @@ var SliderPage =
       };
 
       _this.onTouchStart = function (e) {
-        e.preventDefault();
+        // e.preventDefault();
 
         if (
           e.type === 'touchstart' ||
@@ -125,7 +125,7 @@ var SliderPage =
       };
 
       _this.onTouchEnd = function (e) {
-        e.preventDefault();
+        // e.preventDefault();
 
         if (
           e.type === 'touchstart' ||

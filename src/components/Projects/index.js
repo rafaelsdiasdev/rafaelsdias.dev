@@ -17,14 +17,14 @@ const Projects = () => {
             <a
               href="https://github.com/rafaelsdiasdev/spotify-clone"
               target="_blank"
-              rel="noreferrer"
+              rel="noreferrer noopener"
             >
               <GithubIcon width="20px" height="20px" fill="#fff" />
             </a>
             <a
-              href="https://spotify/rafaelsdias.dev"
+              href="https://spotify.rafaelsdias.dev"
               target="_blank"
-              rel="noreferrer"
+              rel="noreferrer noopener"
             >
               <Pin width="20px" height="20px" fill="#fff" />
             </a>

@@ -16,7 +16,6 @@ const Projects = () => {
           <div className={styles.social}>
             <a
               href="https://github.com/rafaelsdiasdev/spotify-clone"
-              target="_blank"
               rel="noreferrer noopener"
             >
               <GithubIcon width="20px" height="20px" fill="#fff" />

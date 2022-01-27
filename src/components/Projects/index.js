@@ -30,28 +30,34 @@ const Projects = () => {
           </div>
         </li>
         <li className={styles.list__item}>
-          <h2 className={styles.item__title}>Space Invardes</h2>
+          <h2 className={styles.item__title}>Text-to-Speech </h2>
           <p className={styles.item__paragraph}>
-            Reproduction of the old spaceships shoot games - Stack Used: JS
-            Canvas, HTML, CSS.
+            App as a "text-to-speech" demonstration using IBM Wattson.
           </p>
           <div className={styles.social}>
             <a
-              href="https://github.com/rafaelsdiasdev/Space-Invader-Clone"
-              target="_blank"
+              href="https://github.com/rafaelsdiasdev/text-to-speech"
               rel="noreferrer noopener"
             >
               <GithubIcon width="20px" height="20px" fill="#fff" />
             </a>
+          </div>
+        </li>
+        <li className={styles.list__item}>
+          <h2 className={styles.item__title}>Ranek</h2>
+          <p className={styles.item__paragraph}>
+            Study app using Vue.js and Wordpress
+          </p>
+          <div className={styles.social}>
             <a
-              href="https://rafaelsdiasdev.github.io/Space-Invader-Clone/"
-              target="_blank"
+              href="https://github.com/rafaelsdiasdev/Ranek"
               rel="noreferrer noopener"
             >
-              <Pin width="20px" height="20px" fill="#fff" />
+              <GithubIcon width="20px" height="20px" fill="#fff" />
             </a>
           </div>
         </li>
+
         <li className={styles.list__item}>
           <h2 className={styles.item__title}>Coffee&Book</h2>
           <p className={styles.item__paragraph}>
@@ -77,29 +83,7 @@ const Projects = () => {
             </a>
           </div>
         </li>
-        <li className={styles.list__item}>
-          <h2 className={styles.item__title}>Iron Nutrition</h2>
-          <p className={styles.item__paragraph}>
-            Basic project that searches for aliments and show calories. - Stack
-            used: React.js, JS ES6.
-          </p>
-          <div className={styles.social}>
-            <a
-              href="https://github.com/rafaelsdiasdev/iron-nutrition"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              <GithubIcon width="20px" height="20px" fill="#fff" />
-            </a>
-            <a
-              href="https://rafaelsdiasdev.github.io/iron-nutrition/"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              <Pin width="20px" height="20px" fill="#fff" />
-            </a>
-          </div>
-        </li>
+
         <li className={styles.list__item}>
           <h2 className={styles.item__title}>Genki Food</h2>
           <p className={styles.item__paragraph}>

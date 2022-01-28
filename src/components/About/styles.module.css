@@ -56,6 +56,14 @@
 }
 
 @media (max-width:1000px) {
+  .scrollUp {
+    display: none;
+  }
+
+  .scrollDown {
+    display: none;
+  }
+
   .container {
     display: flex;
     flex-direction: column;

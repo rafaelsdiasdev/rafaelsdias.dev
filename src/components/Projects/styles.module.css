@@ -56,6 +56,11 @@
 }
 
 @media (max-width:1000px) {
+  .scrollUp {
+    display: none;
+  }
+
+
   .container {
     display: flex;
     flex-direction: column;
@@ -66,6 +71,7 @@
 }
 
 @media (max-width: 600px) {
+
   .title {
     font-size: 2rem;
   }

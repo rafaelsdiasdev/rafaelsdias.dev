@@ -65,6 +65,17 @@
 .scrollDown img, .scrollUp img {
   height: 64px;
   width: 64px;
+  
+}
+
+@media (max-width: 1000px) {
+  .scrollUp {
+    display: none;
+  }
+
+  .scrollDown {
+    display: none;
+  }
 }
 
 @media (max-width:900px) {

@@ -8,8 +8,8 @@
   margin: 0 auto;
   justify-content: center;  
   padding: 0 3rem;
+  position: relative;
 }
-
 
 .avatar {
   max-width: 300px;
@@ -198,4 +198,25 @@
   .content__about {
     display: grid;
   }
+}
+
+.scroll {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #2D2E2E;
+  bottom: 20px;
+  left: calc(50% + 16px);
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.scroll img {
+  height: 64px;
+  width: 64px;
 }

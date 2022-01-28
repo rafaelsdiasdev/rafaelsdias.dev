@@ -104,9 +104,9 @@ var SliderPage =
         var direction = e.wheelDelta || e.deltaY;
 
         if (direction > 0) {
-          _this.changeSlide(-1);
-        } else {
           _this.changeSlide(1);
+        } else {
+          _this.changeSlide(-1);
         }
       };
 

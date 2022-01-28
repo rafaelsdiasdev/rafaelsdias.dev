@@ -17,6 +17,44 @@
   line-height: 2rem;
 }
 
+.scrollUp {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #2D2E2E;
+  top: 20px;
+  left: calc(50% + 16px);
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1rem;
+  transform: rotate(180deg)
+}
+
+.scrollDown {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #2D2E2E;
+  bottom: 20px;
+  left: calc(50% + 16px);
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.scrollDown img, .scrollUp img {
+  height: 64px;
+  width: 64px;
+}
+
 @media (max-width:1000px) {
   .container {
     display: flex;

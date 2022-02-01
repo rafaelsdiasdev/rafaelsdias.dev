@@ -12,9 +12,9 @@ jobs:
       matrix:
         node-version: [14.0]
 
-     env:
-        REACT_APP_PRISMIC_ACCESS_TOKEN: ${{ secrets.REACT_APP_PRISMIC_ACCESS_TOKEN }}  
-        REACT_APP_PRISMIC_API_ENDPONT: ${{ secrets.REACT_APP_PRISMIC_API_ENDPONT }} 
+    env:
+      REACT_APP_PRISMIC_ACCESS_TOKEN: ${{secrets.REACT_APP_PRISMIC_ACCESS_TOKEN}}
+      REACT_APP_PRISMIC_API_ENDPONT: ${{secrets.REACT_APP_PRISMIC_API_ENDPONT}}
 
     steps:
       - uses: actions/checkout@v2

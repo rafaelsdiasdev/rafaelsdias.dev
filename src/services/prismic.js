@@ -5,6 +5,5 @@ export function getPrismicClient(req) {
     req,
     accessToken: process.env.REACT_APP_PRISMIC_ACCESS_TOKEN,
   });
-
   return prismic;
 }

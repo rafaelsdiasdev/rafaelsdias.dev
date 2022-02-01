@@ -27,7 +27,6 @@ const Home = ({ user }) => {
               alt={user.firstName}
             />
           </div>
-
           <div className={styles.content}>
             <div className={styles.content__about}>
               <div className={styles.content__me}>

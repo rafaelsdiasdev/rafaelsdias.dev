@@ -20,6 +20,8 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          react-app-prismic-api-endpoint: ${{ secrets.REACT_APP_PRISMIC_API_ENDPONT }}
+          react-app-prismic-access-token: ${{ secrets.REACT_APP_PRISMIC_ACCESS_TOKEN }}
           aws-region: us-east-1
 
       - name: Setup Node.js ${{ matrix.node-version }}

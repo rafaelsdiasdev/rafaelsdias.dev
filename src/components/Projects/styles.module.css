@@ -40,14 +40,15 @@
   background-color: #fff;
   color: #2D2E2E;
   top: 20px;
-  left: calc(50% + 16px);
+  left: 11rem;
   position: absolute;
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
   font-size: 1rem;
-  transform: rotate(180deg)
+  transform: rotate(180deg);
+  cursor: pointer;
 }
 
 .scrollUp img {

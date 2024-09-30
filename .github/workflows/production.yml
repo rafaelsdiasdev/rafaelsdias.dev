@@ -19,6 +19,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Create S3 bucket if it does not exist
+        run: |
+          aws s3api head-bucket --bucket rafaelsdias.dev || aws s3api create-bucket --bucket rafaelsdias.dev --region us-east-1
+
       - name: Copy index.html to deploy directory
         run: mkdir -p build && cp index.html build/
 

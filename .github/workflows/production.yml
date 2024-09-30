@@ -37,5 +37,8 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Copy index.html to build directory
+        run: cp index.html build/
+
       - name: Deploy to AWS
         run: npm run deploy

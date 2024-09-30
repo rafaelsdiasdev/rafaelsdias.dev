@@ -23,7 +23,14 @@ jobs:
         run: |
           if ! aws s3api head-bucket --bucket rafaelsdias.dev 2>/dev/null; then
             echo "Bucket does not exist. Creating..."
-            aws s3api create-bucket --bucket rafaelsdias.dev --region us-east-1
+            attempts=0
+            until [ $attempts -ge 5 ]
+            do
+              aws s3api create-bucket --bucket rafaelsdias.dev --region us-east-1 && break
+              attempts=$((attempts+1))
+              echo "Retrying to create bucket... ($attempts)"
+              sleep 10
+            done
           else
             echo "Bucket exists."
           fi

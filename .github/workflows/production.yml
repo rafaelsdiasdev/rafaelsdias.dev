@@ -1,3 +1,10 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - master
+
 jobs:
   deploy-prod:
     runs-on: ubuntu-latest
@@ -16,13 +23,7 @@ jobs:
         run: |
           if ! aws s3api head-bucket --bucket rafaelsdias.dev 2>/dev/null; then
             echo "Bucket does not exist. Creating..."
-            attempts=0
-            while [ $attempts -lt 5 ]; do
-              aws s3api create-bucket --bucket rafaelsdias.dev --region us-east-1 && break
-              attempts=$((attempts+1))
-              echo "Retrying to create bucket... ($attempts)"
-              sleep 10
-            done
+            aws s3api create-bucket --bucket rafaelsdias.dev --region us-east-1
           else
             echo "Bucket exists."
           fi

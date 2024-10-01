@@ -33,3 +33,17 @@ jobs:
 
       - name: Deploy to AWS
         run: aws s3 sync build/ s3://rafaelsdias.dev --delete
+
+      - name: Create or update CodePipeline
+        run: |
+          aws codepipeline create-pipeline --cli-input-json file://pipeline.json || \
+          aws codepipeline update-pipeline --cli-input-json file://pipeline.json
+
+      - name: Invalidate CloudFront cache
+        run: |
+          E3L4YKIOZDCP7C=$(aws cloudfront list-distributions --query "DistributionList.Items[?Comment=='rafaelsdias.dev'].Id" --output text)
+          if [ -n "$E3L4YKIOZDCP7C" ]; then
+            aws cloudfront create-invalidation --distribution-id $E3L4YKIOZDCP7C --paths "/*"
+          else
+            echo "CloudFront distribution not found."
+          fi

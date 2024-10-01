@@ -54,6 +54,30 @@
               "runOrder": 1
             }
           ]
+        },
+        {
+          "name": "Deploy to AWS",
+          "actions": [
+            {
+              "name": "Deploy to AWS",
+              "actionTypeId": {
+                "category": "Deploy",
+                "owner": "AWS",
+                "provider": "S3",
+                "version": "1"
+              },
+              "inputArtifacts": [
+                {
+                  "name": "SourceArtifact"
+                }
+              ],
+              "configuration": {
+                "BucketName": "rafaelsdias.dev",
+                "Extract": "true"
+              },
+              "runOrder": 1
+            }
+          ]
         }
       ]
     }

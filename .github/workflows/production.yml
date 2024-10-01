@@ -28,6 +28,10 @@ jobs:
             echo "Bucket exists."
           fi
 
+      - name: Enable versioning on S3 bucket
+        run: |
+          aws s3api put-bucket-versioning --bucket rafaelsdias.dev --versioning-configuration Status=Enabled
+
       - name: Copy index.html to deploy directory
         run: mkdir -p build && cp index.html build/
 
@@ -36,6 +40,7 @@ jobs:
 
       - name: Create or update CodePipeline
         run: |
+          echo '${{ secrets.PIPELINE_JSON }}' > pipeline.json
           aws codepipeline create-pipeline --cli-input-json file://pipeline.json || \
           aws codepipeline update-pipeline --cli-input-json file://pipeline.json
 

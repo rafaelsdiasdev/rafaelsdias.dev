@@ -25,7 +25,7 @@
               ],
               "configuration": {
                 "S3Bucket": "rafaelsdias.dev",
-                "S3ObjectKey": "index.html"
+                "S3ObjectKey": "build.zip"
               },
               "runOrder": 1
             }

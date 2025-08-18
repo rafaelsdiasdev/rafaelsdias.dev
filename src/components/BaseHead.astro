@@ -82,11 +82,11 @@ const { title, description, image = FallbackImage } = Astro.props;
   "@type": "Blog",
   "name": "Rafael Dias - Technical Blog",
   "description": "Blog técnico sobre arquitetura de software, microsserviços e tecnologia",
-  "url": "https://rafaelsdias.dev",
+  "url": Astro.site,
   "author": {
     "@type": "Person",
     "name": "Rafael Dias",
-    "url": "https://rafaelsdias.dev/about"
+    "url": `${Astro.site}about`
   },
   "publisher": {
     "@type": "Person",

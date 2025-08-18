@@ -1,0 +1,235 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SITE_TITLE } from '../consts';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<!doctype html>
+<html lang="pt-BR">
+	<head>
+		<BaseHead title={`Busca - ${SITE_TITLE}`} description="Resultados da busca no blog técnico" />
+	</head>
+	<body class="bg-gray-50 text-gray-900 antialiased">
+		<Header />
+		<main class="min-h-screen">
+			<div class="container py-8">
+				<section class="mb-8">
+					<h1 class="section-title mb-4">
+						Buscar Artigos
+					</h1>
+					<div class="search-page-container">
+						<input 
+							type="search" 
+							id="search-page-input" 
+							placeholder="Digite sua busca..."
+							class="search-page-input"
+							autocomplete="off"
+						/>
+					</div>
+				</section>
+
+				<section id="search-results">
+					<div id="search-stats" class="search-stats hidden">
+						<p class="text-gray-600"></p>
+					</div>
+					
+					<div id="results-container" class="posts-grid"></div>
+					
+					<div id="no-results" class="no-results hidden">
+						<h2 class="text-xl font-semibold mb-4">Nenhum resultado encontrado</h2>
+						<p class="text-gray-600 mb-6">Tente ajustar sua busca ou explorar nossos artigos:</p>
+						<div class="posts-grid">
+							{posts.slice(0, 3).map((post) => (
+								<article class="post-card">
+									<a href={`/blog/${post.id}/`} class="block">
+										<div class="post-meta mb-3">
+											<time class="post-date">
+												<FormattedDate date={post.data.pubDate} />
+											</time>
+										</div>
+										<h3 class="post-title mb-3">
+											{post.data.title}
+										</h3>
+										<p class="post-description">
+											{post.data.description}
+										</p>
+									</a>
+								</article>
+							))}
+						</div>
+					</div>
+				</section>
+			</div>
+		</main>
+		<Footer />
+
+		<script define:vars={{ posts }}>
+			// Dados dos posts para busca
+			const searchData = posts.map(post => ({
+				id: post.id,
+				title: post.data.title,
+				description: post.data.description,
+				pubDate: post.data.pubDate,
+				url: `/blog/${post.id}/`
+			}));
+
+			// Elementos DOM
+			const searchInput = document.getElementById('search-page-input');
+			const searchStats = document.getElementById('search-stats');
+			const resultsContainer = document.getElementById('results-container');
+			const noResults = document.getElementById('no-results');
+
+			// Função de busca
+			function searchPosts(query) {
+				if (!query || query.length < 2) {
+					showNoResults();
+					return;
+				}
+
+				const lowerQuery = query.toLowerCase();
+				const results = searchData.filter(post => 
+					post.title.toLowerCase().includes(lowerQuery) ||
+					post.description.toLowerCase().includes(lowerQuery)
+				);
+
+				displayResults(results, query);
+			}
+
+			// Exibir resultados
+			function displayResults(results, query) {
+				if (results.length === 0) {
+					showNoResults();
+					return;
+				}
+
+				// Mostrar estatísticas
+				searchStats.classList.remove('hidden');
+				searchStats.querySelector('p').textContent = 
+					`${results.length} ${results.length === 1 ? 'resultado encontrado' : 'resultados encontrados'} para "${query}"`;
+
+				// Mostrar resultados
+				resultsContainer.innerHTML = results.map(post => `
+					<article class="post-card">
+						<a href="${post.url}" class="block">
+							<div class="post-meta mb-3">
+								<time class="post-date">
+									${formatDate(post.pubDate)}
+								</time>
+							</div>
+							<h3 class="post-title mb-3">
+								${highlightText(post.title, query)}
+							</h3>
+							<p class="post-description">
+								${highlightText(post.description, query)}
+							</p>
+						</a>
+					</article>
+				`).join('');
+
+				resultsContainer.classList.remove('hidden');
+				noResults.classList.add('hidden');
+			}
+
+			// Mostrar quando não há resultados
+			function showNoResults() {
+				searchStats.classList.add('hidden');
+				resultsContainer.classList.add('hidden');
+				noResults.classList.remove('hidden');
+			}
+
+			// Destacar texto da busca
+			function highlightText(text, query) {
+				if (!query) return text;
+				const regex = new RegExp(`(${query})`, 'gi');
+				return text.replace(regex, '<mark>$1</mark>');
+			}
+
+			// Formatar data
+			function formatDate(dateString) {
+				return new Date(dateString).toLocaleDateString('pt-BR', {
+					year: 'numeric',
+					month: 'short',
+					day: 'numeric'
+				});
+			}
+
+			// Event listeners
+			searchInput.addEventListener('input', (e) => {
+				searchPosts(e.target.value);
+			});
+
+			// Verificar query string da URL
+			const urlParams = new URLSearchParams(window.location.search);
+			const initialQuery = urlParams.get('q');
+			if (initialQuery) {
+				searchInput.value = initialQuery;
+				searchPosts(initialQuery);
+			}
+		</script>
+
+		<style>
+			.search-page-container {
+				max-width: 500px;
+				margin-bottom: 2rem;
+			}
+
+			.search-page-input {
+				width: 100%;
+				padding: 1rem 1.5rem;
+				border: 2px solid var(--color-border);
+				border-radius: 0.75rem;
+				background-color: var(--color-bg-primary);
+				color: var(--color-text-primary);
+				font-size: 1rem;
+				transition: all 200ms ease;
+			}
+
+			.search-page-input:focus {
+				outline: none;
+				border-color: var(--color-primary);
+				box-shadow: 0 0 0 3px var(--color-primary)20;
+			}
+
+			.search-page-input::placeholder {
+				color: var(--color-text-muted);
+			}
+
+			.search-stats {
+				margin-bottom: 1.5rem;
+				padding: 1rem;
+				background-color: var(--color-bg-secondary);
+				border-radius: 0.5rem;
+				border: 1px solid var(--color-border);
+			}
+
+			.no-results {
+				text-align: center;
+				padding: 3rem 1rem;
+			}
+
+			.hidden {
+				display: none;
+			}
+
+			mark {
+				background-color: var(--color-primary);
+				color: var(--color-text-inverse);
+				padding: 0.125rem 0.25rem;
+				border-radius: 0.25rem;
+			}
+
+			@media (max-width: 768px) {
+				.search-page-container {
+					max-width: none;
+				}
+			}
+		</style>
+	</body>
+</html> 

@@ -11,76 +11,130 @@ type Props = CollectionEntry<'blog'>['data'];
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
-<html lang="en">
+<html lang="pt-BR">
 	<head>
 		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
 	</head>
 
-	<body>
+	<body class="bg-gray-50 text-gray-900 antialiased">
 		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
+		<main class="min-h-screen">
+			<article class="blog-article">
+				{heroImage && (
+					<div class="hero-image">
+						<Image 
+							width={1020} 
+							height={510} 
+							src={heroImage} 
+							alt={title}
+							class="hero-img"
+							loading="lazy"
+							decoding="async"
+						/>
 					</div>
-					<slot />
+				)}
+				
+				<div class="prose">
+					<header class="blog-header">
+						<div class="blog-meta">
+							<time class="blog-date">
+								<FormattedDate date={pubDate} />
+							</time>
+							{updatedDate && (
+								<div class="blog-updated">
+									Atualizado em <FormattedDate date={updatedDate} />
+								</div>
+							)}
+						</div>
+						<h1 class="blog-title">
+							{title}
+						</h1>
+						<p class="blog-description">
+							{description}
+						</p>
+					</header>
+					
+					<div class="blog-content">
+						<slot />
+					</div>
 				</div>
 			</article>
 		</main>
 		<Footer />
+		
+		<style>
+		.blog-article {
+			max-width: 56rem;
+			margin: 0 auto;
+			padding: 2rem 1rem;
+		}
+		
+		.hero-image {
+			margin-bottom: 2rem;
+		}
+		
+		.hero-img {
+			width: 100%;
+			height: auto;
+			border-radius: var(--border-radius-xl);
+			box-shadow: var(--shadow-lg);
+			object-fit: cover;
+		}
+		
+		.blog-header {
+			text-align: center;
+			margin-bottom: 3rem;
+			padding-bottom: 2rem;
+			border-bottom: 1px solid var(--color-border);
+		}
+		
+		.blog-meta {
+			margin-bottom: 1rem;
+		}
+		
+		.blog-date {
+			color: var(--color-primary);
+			font-weight: 500;
+			font-size: 0.875rem;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+		}
+		
+		.blog-updated {
+			color: var(--color-text-muted);
+			font-size: 0.875rem;
+			margin-top: 0.5rem;
+		}
+		
+		.blog-title {
+			font-size: 2.25rem;
+			font-weight: 700;
+			color: var(--color-text-primary);
+			line-height: 1.25;
+			margin-bottom: 1rem;
+		}
+		
+		.blog-description {
+			font-size: 1.25rem;
+			color: var(--color-text-muted);
+			margin: 0 auto;
+			max-width: 48rem;
+		}
+		
+		.blog-content {
+			font-size: 1.125rem;
+			line-height: 1.625;
+		}
+		
+		@media (max-width: 768px) {
+			.blog-title {
+				font-size: 1.875rem;
+			}
+			
+			.blog-content {
+				font-size: 1rem;
+			}
+		}
+		</style>
 	</body>
 </html>

@@ -21,6 +21,12 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<!-- Set default dark theme immediately to prevent flash -->
+<script>
+	const theme = localStorage.getItem('theme') || 'dark';
+	document.documentElement.setAttribute('data-theme', theme);
+</script>
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link
 	rel="alternate"
@@ -28,11 +34,17 @@ const { title, description, image = FallbackImage } = Astro.props;
 	title={SITE_TITLE}
 	href={new URL('rss.xml', Astro.site)}
 />
-<meta name="generator" content={Astro.generator} />
+
 
 <!-- Font preloads -->
 <link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
 <link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
+
+<!-- DNS prefetch for external resources -->
+<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+
+<!-- Preconnect for critical third-party origins -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
@@ -54,4 +66,32 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
+<meta property="twitter:image" content={new URL(image.src, Astro.url)} />
+
+<!-- Additional SEO Meta Tags -->
+<meta name="robots" content="index, follow" />
+<meta name="googlebot" content="index, follow" />
+<meta name="author" content="Rafael Dias" />
+<meta name="language" content="pt-BR" />
+<meta name="theme-color" content="#111827" />
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "Rafael Dias - Technical Blog",
+  "description": "Blog técnico sobre arquitetura de software, microsserviços e tecnologia",
+  "url": "https://rafaelsdias.dev",
+  "author": {
+    "@type": "Person",
+    "name": "Rafael Dias",
+    "url": "https://rafaelsdias.dev/about"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Rafael Dias"
+  }
+}
+</script>
 <meta property="twitter:image" content={new URL(image.src, Astro.url)} />

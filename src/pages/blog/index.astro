@@ -1,11 +1,10 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
+import PostCard from '../../components/PostCard.astro';
 import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import { SITE_TITLE } from '../../consts';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -13,102 +12,236 @@ const posts = (await getCollection('blog')).sort(
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
+		<BaseHead title={`Blog - ${SITE_TITLE}`} description="Artigos técnicos sobre arquitetura de software, microsserviços e sistemas distribuídos" />
 	</head>
-	<body>
+	<body class="bg-gray-50 text-gray-900 antialiased">
 		<Header />
-		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
+		<main class="min-h-screen">
+			<div class="container py-8">
+				<section class="text-center mb-16 py-12">
+					<h1 class="blog-title mb-6">
+						Blog
+					</h1>
+					<p class="blog-subtitle mb-8">
+						Artigos técnicos sobre arquitetura de software, microsserviços e sistemas distribuídos
+					</p>
+				</section>
+
+				{posts.length === 0 ? (
+					<section class="text-center py-16">
+						<h2 class="section-title mb-4">Nenhum artigo publicado ainda</h2>
+						<p class="hero-description">Em breve novos artigos serão publicados aqui.</p>
+					</section>
+				) : (
+					<>
+						{/* Post em Destaque */}
+						<section class="mb-16">
+							<h2 class="section-title mb-8">
+								Artigo em Destaque
+							</h2>
+							<PostCard post={posts[0]} featured={true} />
+						</section>
+
+						{/* Posts em Grid (excluindo o primeiro que já está em destaque) */}
+						{posts.length > 1 && (
+							<section class="mb-16">
+								<h2 class="section-title mb-8">
+									Outros Artigos
+								</h2>
+								<div class="posts-grid">
+									{posts.slice(1).map((post) => (
+										<PostCard post={post} />
+									))}
+								</div>
+							</section>
+						)}
+					</>
+				)}
+
+				<section>
+					<h2 class="section-title mb-8">
+						Recursos
+					</h2>
+					<div class="topics-grid">
+						<div class="topic-card">
+							<h3 class="topic-title">
+								RSS Feed
+							</h3>
+							<p class="topic-description mb-4">
+								Acompanhe as atualizações do blog
+							</p>
+							<a href="/rss.xml" class="rss-link" target="_blank">
+								Assinar RSS
+							</a>
+						</div>
+						<div class="topic-card">
+							<h3 class="topic-title">
+								Arquivo
+							</h3>
+							<p class="topic-description">
+								{posts.length} {posts.length === 1 ? 'artigo publicado' : 'artigos publicados'}
+							</p>
+						</div>
+						<div class="topic-card">
+							<h3 class="topic-title">
+								Categorias
+							</h3>
+							<p class="topic-description">
+								Arquitetura, Microsserviços, Performance
+							</p>
+						</div>
+						<div class="topic-card">
+							<h3 class="topic-title">
+								Sobre o Autor
+							</h3>
+							<p class="topic-description">
+								Software Engineer especializado em sistemas distribuídos
+							</p>
+						</div>
+					</div>
+				</section>
+			</div>
 		</main>
 		<Footer />
+		
+		<style>
+		/* Usando os mesmos estilos da homepage para consistência */
+		.blog-title {
+			font-size: 3rem;
+			font-weight: 700;
+			background: linear-gradient(to right, var(--color-primary), var(--color-accent));
+			background-clip: text;
+			-webkit-background-clip: text;
+			color: transparent;
+		}
+		
+		.blog-subtitle {
+			font-size: 1.5rem;
+			color: var(--color-text-muted);
+			font-weight: 500;
+		}
+		
+		.section-title {
+			font-size: 1.875rem;
+			font-weight: 700;
+			color: var(--color-text-primary);
+		}
+		
+		.hero-description {
+			font-size: 1.125rem;
+			color: var(--color-text-secondary);
+			max-width: 48rem;
+			margin: 0 auto;
+			line-height: 1.625;
+		}
+		
+		.post-meta {
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: 0.5rem;
+		}
+		
+		.post-date {
+			color: var(--color-primary);
+			font-size: 0.875rem;
+			font-weight: 500;
+		}
+		
+		.post-updated {
+			color: var(--color-text-muted);
+			font-size: 0.875rem;
+		}
+		
+		.post-title {
+			font-size: 1.25rem;
+			font-weight: 600;
+			color: var(--color-text-primary);
+			transition: color 200ms ease;
+		}
+		
+		.post-title:hover {
+			color: var(--color-primary);
+		}
+		
+		.post-description {
+			color: var(--color-text-muted);
+			line-height: 1.625;
+		}
+		
+		.topics-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+			gap: 1.5rem;
+		}
+		
+		.topic-card {
+			background-color: var(--color-bg-primary);
+			border-radius: var(--border-radius-xl);
+			border: 1px solid var(--color-border);
+			padding: 1.5rem;
+			text-align: center;
+			transition: all 300ms ease;
+		}
+		
+		.topic-card:hover {
+			box-shadow: var(--shadow-lg);
+			transform: translateY(-0.25rem);
+			border-color: var(--color-border-hover);
+		}
+		
+		.topic-title {
+			font-size: 1.125rem;
+			font-weight: 600;
+			color: var(--color-primary);
+			margin-bottom: 0.75rem;
+		}
+		
+		.topic-description {
+			color: var(--color-text-muted);
+			margin: 0;
+		}
+		
+		.rss-link {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.5rem;
+			color: var(--color-primary);
+			text-decoration: none;
+			font-weight: 500;
+			padding: 0.5rem 1rem;
+			border: 1px solid var(--color-primary);
+			border-radius: 0.5rem;
+			transition: all 200ms ease;
+			font-size: 0.875rem;
+		}
+		
+		.rss-link:hover {
+			background-color: var(--color-primary);
+			color: var(--color-text-inverse);
+		}
+		
+		@media (max-width: 768px) {
+			.blog-title {
+				font-size: 2.5rem;
+			}
+			
+			.blog-subtitle {
+				font-size: 1.25rem;
+			}
+			
+			.topics-grid {
+				grid-template-columns: 1fr;
+			}
+			
+			.post-meta {
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 0.25rem;
+			}
+		}
+		</style>
 	</body>
 </html>

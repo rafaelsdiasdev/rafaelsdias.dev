@@ -6,6 +6,25 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://example.com',
-	integrations: [mdx(), sitemap()],
+  site: 'https://rafaelsdias.dev',
+  integrations: [mdx(), sitemap()],
+  devToolbar: {
+    enabled: false
+  },
+  build: {
+    inlineStylesheets: 'auto'
+  },
+  vite: {
+    build: {
+      cssMinify: true,
+      minify: 'terser',
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'astro-client': ['astro/runtime/client/idle.js', 'astro/runtime/client/load.js']
+          }
+        }
+      }
+    }
+  }
 });

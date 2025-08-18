@@ -1,0 +1,39 @@
+---
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+  post: {
+    id: string;
+    data: {
+      title: string;
+      description: string;
+      pubDate: Date;
+    };
+  };
+  featured?: boolean;
+}
+
+const { post, featured = false } = Astro.props;
+const cardClass = featured ? 'featured-post' : 'post-card';
+---
+
+<article class={cardClass}>
+  <a href={`/blog/${post.id}/`} class="block">
+    <div class="post-meta mb-3">
+      <time class={featured ? 'featured-post-date' : 'post-date'}>
+        <FormattedDate date={post.data.pubDate} />
+      </time>
+    </div>
+    <h3 class={featured ? 'featured-post-title' : 'post-title mb-3'}>
+      {post.data.title}
+    </h3>
+    <p class={featured ? 'featured-post-description' : 'post-description'}>
+      {post.data.description}
+    </p>
+    {featured && (
+      <span class="featured-post-cta">
+        Ler artigo completo →
+      </span>
+    )}
+  </a>
+</article> 

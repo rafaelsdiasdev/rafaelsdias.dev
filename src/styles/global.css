@@ -958,6 +958,45 @@ mark {
   border-top: 1px solid var(--color-border);
 }
 
+.mobile-theme-toggle {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.mobile-theme-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  margin: 0 auto;
+}
+
+.mobile-theme-button:hover {
+  background: var(--color-bg-tertiary);
+  border-color: var(--color-primary);
+}
+
+.mobile-theme-button .theme-label {
+  font-size: 1rem;
+}
+
+/* Dark mode icons visibility */
+[data-theme="light"] .mobile-theme-button .moon-icon {
+  display: none;
+}
+
+[data-theme="dark"] .mobile-theme-button .sun-icon {
+  display: none;
+}
+
 .mobile-social-links {
   display: flex;
   gap: 1rem;
@@ -986,10 +1025,6 @@ mark {
   }
   
   .nav-links {
-    display: none;
-  }
-  
-  .social-links {
     display: none;
   }
 }

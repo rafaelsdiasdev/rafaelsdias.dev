@@ -1,0 +1,59 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Check if S3 bucket exists and create if not
+        run: |
+          if ! aws s3api head-bucket --bucket rafaelsdias.dev 2>/dev/null; then
+            echo "Bucket does not exist. Creating..."
+            aws s3api create-bucket --bucket rafaelsdias.dev --region us-east-1
+          else
+            echo "Bucket exists."
+          fi
+
+      - name: Enable versioning on S3 bucket
+        run: |
+          aws s3api put-bucket-versioning --bucket rafaelsdias.dev --versioning-configuration Status=Enabled
+
+      - name: Copy index.html to deploy directory
+        run: mkdir -p build && cp index.html build/
+
+      - name: Zip the build directory
+        run: |
+          cd build
+          zip -r ../build.zip .
+
+      - name: Deploy to AWS
+        run: aws s3 cp build.zip s3://rafaelsdias.dev/build.zip
+
+      - name: Create or update CodePipeline
+        run: |
+          echo "${{ secrets.PIPELINE_JSON }}" > pipeline.json
+          aws codepipeline create-pipeline --cli-input-json file://pipeline.json || \
+          aws codepipeline update-pipeline --cli-input-json file://pipeline.json
+
+      - name: Invalidate CloudFront cache
+        run: |
+          E3L4YKIOZDCP7C=$(aws cloudfront list-distributions --query "DistributionList.Items[?Comment=='rafaelsdias.dev'].Id" --output text)
+          if [ -n "$E3L4YKIOZDCP7C" ]; then
+            aws cloudfront create-invalidation --distribution-id $E3L4YKIOZDCP7C --paths "/*"
+          else
+            echo "CloudFront distribution not found."
+          fi

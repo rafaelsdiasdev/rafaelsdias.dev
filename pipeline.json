@@ -1,0 +1,60 @@
+{
+    "pipeline": {
+      "name": "rafaelsdias-dev-pipeline",
+      "roleArn": "arn:aws:iam::598456468173:role/service-role/AWSCodePipelineServiceRole-us-east-1-cicd-rafaelsdias.dev",
+      "artifactStore": {
+        "type": "S3",
+        "location": "rafaelsdias.dev"
+      },
+      "stages": [
+        {
+          "name": "Source",
+          "actions": [
+            {
+              "name": "Source",
+              "actionTypeId": {
+                "category": "Source",
+                "owner": "AWS",
+                "provider": "S3",
+                "version": "1"
+              },
+              "outputArtifacts": [
+                {
+                  "name": "SourceArtifact"
+                }
+              ],
+              "configuration": {
+                "S3Bucket": "rafaelsdias.dev",
+                "S3ObjectKey": "build.zip"
+              },
+              "runOrder": 1
+            }
+          ]
+        },
+        {
+          "name": "Deploy",
+          "actions": [
+            {
+              "name": "Deploy",
+              "actionTypeId": {
+                "category": "Deploy",
+                "owner": "AWS",
+                "provider": "S3",
+                "version": "1"
+              },
+              "inputArtifacts": [
+                {
+                  "name": "SourceArtifact"
+                }
+              ],
+              "configuration": {
+                "BucketName": "rafaelsdias.dev",
+                "Extract": "true"
+              },
+              "runOrder": 1
+            }
+          ]
+        }
+      ]
+    }
+  }

@@ -13,8 +13,8 @@ import HeaderLink from './HeaderLink.astro';
 		
 		<div class="nav-links">
 			<HeaderLink href={import.meta.env.BASE_URL}>Home</HeaderLink>
-			<HeaderLink href={import.meta.env.BASE_URL + 'blog'}>Blog</HeaderLink>
-			<HeaderLink href={import.meta.env.BASE_URL + 'about'}>Sobre</HeaderLink>
+			<HeaderLink href={import.meta.env.BASE_URL + 'blog/'}>Blog</HeaderLink>
+			<HeaderLink href={import.meta.env.BASE_URL + 'about/'}>Sobre</HeaderLink>
 		</div>
 		
 		<div class="search-container">
@@ -39,7 +39,7 @@ import HeaderLink from './HeaderLink.astro';
 						<div id="search-modal-results" class="search-modal-results"></div>
 						<div id="search-modal-no-results" class="search-modal-no-results hidden">
 							<p>Nenhum resultado encontrado</p>
-							<a href={`${import.meta.env.BASE_URL}search`} class="search-modal-link">Ver página de busca</a>
+							<a href={`${import.meta.env.BASE_URL}search/`} class="search-modal-link">Ver página de busca</a>
 						</div>
 					</div>
 				</div>

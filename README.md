@@ -2,7 +2,7 @@
 
 Um blog técnico sobre arquitetura de software, microsserviços e engenharia de sistemas distribuídos.
 
-## 🚀 Sobre o Projeto
+## Sobre o Projeto
 
 Este é o site pessoal e blog técnico do Rafael Dias, construído com [Astro](https://astro.build/) e CSS personalizado. O foco é compartilhar conhecimento sobre:
 
@@ -12,7 +12,7 @@ Este é o site pessoal e blog técnico do Rafael Dias, construído com [Astro](h
 - **Performance e Escalabilidade**
 - **DevOps e Cloud Computing**
 
-## 🛠️ Stack Tecnológica
+## Stack Tecnológica
 
 - **[Astro](https://astro.build/)** - Framework estático moderno
 - **CSS Personalizado** - Styling responsivo com variáveis CSS
@@ -68,7 +68,7 @@ npm run build        # Build para produção
 npm run preview      # Preview do build de produção
 ```
 
-## ✍️ Criando Novos Posts
+## Criando Novos Posts
 
 1. Crie um novo arquivo `.md` ou `.mdx` em `src/content/blog/`
 2. Adicione o frontmatter necessário:
@@ -86,7 +86,7 @@ Conteúdo do post em Markdown...
 
 3. O post será automaticamente incluído na listagem e no RSS feed
 
-## 🎨 Personalização
+## Personalização
 
 ### Constantes do Site
 
@@ -113,16 +113,14 @@ Edite `src/consts.ts` para modificar:
 - ✅ Sintaxe highlighting para código
 - ✅ Navegação acessível
 
-## 📄 Licença
+## Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-## 🤝 Contato
+## Contato
 
 - **LinkedIn**: [linkedin.com/in/rafaelsdias](https://linkedin.com/in/rafaelsdias)
 - **GitHub**: [github.com/rafaelsdias](https://github.com/rafaelsdias)
 - **Website**: [rafaelsdias.dev](https://rafaelsdias.dev)
 
 ---
-
-Desenvolvido com ❤️ usando Astro

@@ -716,12 +716,8 @@ CQRS + Event Sourcing oferecem potência para domínios complexos: **rastreabili
 
 O custo vem em operação, consistência eventual e disciplina de eventos.
 
-Se o seu domínio pede auditoria forte e várias visões de leitura, vale a pena — desde que você trate idempotência, versionamento otimista, replay e observabilidade como cidadãos de primeira classe.
+Para domínios com auditoria rígida e vários read models, a combinação é recomendada — mas só funciona bem se idempotência, optimistic locking, replay e observabilidade fizerem parte do desenho desde o início.
 
 ## Próximos passos
 
 No próximo artigo, vou entrar em padrões de consistência (sagas, outbox, exactly-once-like) e observabilidade para pipelines de eventos (tracing, métricas e dead-letters).
-
----
-
-*Tem experiência com CQRS + Event Sourcing? Compartilhe nos comentários como você resolve os desafios de eventual consistency e replay em produção!*

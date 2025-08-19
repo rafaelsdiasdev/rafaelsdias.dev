@@ -1,18 +1,18 @@
 ---
-title: 'CQRS + Event Sourcing: separando escrita e leitura com eventos'
-description: 'Implementação prática de CQRS e Event Sourcing em Java, com exemplos de command handlers, agregados, event store e projeções para sistemas distribuídos complexos.'
+title: 'CQRS + Event Sourcing: Sistema de Tarifas Bancárias com Eventos'
+description: 'Implementação de CQRS e Event Sourcing para sistema de tarifas bancárias: comandos de cobrança, consultas de tarifas e eventos imutáveis de cobrança.'
 pubDate: 'Jan 3 2025'
 ---
 
 ## Introdução
 
-Em sistemas de negócio complexos, a mesma entidade costuma ter necessidades diferentes para escrita (regras, validações, consistência) e leitura (consultas rápidas, filtros, agregações).
+Em sistemas de tarifas bancárias, as necessidades são diferentes para **cobrança** (regras complexas, validações, auditoria) e **consulta** (velocidade, relatórios, dashboards).
 
-**CQRS** (Command Query Responsibility Segregation) propõe separar esses dois mundos.
+**CQRS** (Command Query Responsibility Segregation) propõe separar cobrança de consulta de tarifas.
 
-**Event Sourcing** (ES) registra mudanças como eventos imutáveis em vez de sobrescrever o estado atual.
+**Event Sourcing** (ES) registra todas as cobranças como eventos imutáveis em vez de apenas atualizar saldos.
 
-Usados juntos, entregam: rastreabilidade completa, reprocessamento/rebuild do estado e liberdade para otimizar leitura e escrita de forma independente.
+Usados juntos em tarifas bancárias, entregam: **auditoria completa de cobranças**, **reprocessamento de tarifas** e **consultas ultra-rápidas** de receita.
 
 ## Para quem está começando: explicação simples
 

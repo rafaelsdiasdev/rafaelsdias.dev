@@ -62,6 +62,44 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		</main>
 		<Footer />
 		
+		<!-- Mermaid.js -->
+		<script type="module">
+			import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+			
+			mermaid.initialize({
+				startOnLoad: false,
+				theme: 'default',
+				flowchart: {
+					useMaxWidth: true,
+					htmlLabels: true,
+					curve: 'cardinal'
+				}
+			});
+
+			// Convert code blocks with language="mermaid" to rendered diagrams
+			document.addEventListener('DOMContentLoaded', function() {
+				const mermaidBlocks = document.querySelectorAll('pre[data-language="mermaid"]');
+				
+				mermaidBlocks.forEach((block, index) => {
+					const codeElement = block.querySelector('code');
+					const content = codeElement ? codeElement.textContent : block.textContent;
+					const id = `mermaid-${index}`;
+					
+					// Create a div to replace the code block
+					const div = document.createElement('div');
+					div.className = 'mermaid';
+					div.id = id;
+					div.textContent = content;
+					
+					// Replace the pre element
+					block.parentNode.replaceChild(div, block);
+				});
+				
+				// Render all mermaid diagrams
+				mermaid.run();
+			});
+		</script>
+		
 		<style>
 		.blog-article {
 			max-width: 56rem;
@@ -124,6 +162,33 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		.blog-content {
 			font-size: 1.125rem;
 			line-height: 1.625;
+		}
+		
+		/* Mermaid diagram styling */
+		.mermaid {
+			text-align: center;
+			margin: 2rem 0;
+			padding: 1.5rem;
+			background: var(--color-bg-secondary);
+			border-radius: var(--border-radius-lg);
+			border: 1px solid var(--color-border);
+			transition: background-color 300ms ease, border-color 300ms ease;
+		}
+		
+		.mermaid svg {
+			max-width: 100%;
+			height: auto;
+			filter: none;
+		}
+		
+		/* Dark mode adjustments for Mermaid */
+		:global(.dark) .mermaid {
+			background: var(--color-bg-tertiary);
+			border-color: var(--color-border);
+		}
+		
+		:global(.dark) .mermaid svg {
+			filter: brightness(0.95) contrast(1.1);
 		}
 		
 		@media (max-width: 768px) {

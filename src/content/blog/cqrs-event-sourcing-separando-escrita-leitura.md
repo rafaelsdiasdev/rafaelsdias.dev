@@ -168,11 +168,48 @@ public class JdbcEventStore implements EventStore {
 
     @Override
     public void append(String aggregateId, long expectedVersion, List<DomainEvent> newEvents) {
-        // BEGIN;
-        // SELECT max(version) FROM events WHERE aggregate_id=? FOR UPDATE;
-        // if (dbVersion != expectedVersion) -> throw ConcurrencyException;
-        // INSERT rows (aggregate_id, version++, type, payload_json, occurred_at);
-        // COMMIT;
+        try (var conn = ds.getConnection()) {
+            conn.setAutoCommit(false);
+            
+            // Verifica versão atual com lock otimista
+            long currentVersion = selectMaxVersionForUpdate(conn, aggregateId); // retorna -1 se novo agregado
+            if (currentVersion != expectedVersion - 1) {
+                throw new ConcurrencyException("Expected version " + (expectedVersion - 1) + 
+                                             " but found " + currentVersion);
+            }
+            
+            // Insere eventos com versão incremental
+            long nextVersion = expectedVersion;
+            for (var event : newEvents) {
+                insertEvent(conn, aggregateId, nextVersion, event);
+                nextVersion++;
+            }
+            
+            conn.commit();
+        } catch (SQLException e) {
+            throw new EventStoreException("Failed to append events", e);
+        }
+    }
+    
+    private long selectMaxVersionForUpdate(Connection conn, String aggregateId) throws SQLException {
+        try (var stmt = conn.prepareStatement(
+            "SELECT COALESCE(MAX(version), -1) FROM events WHERE aggregate_id = ? FOR UPDATE")) {
+            stmt.setString(1, aggregateId);
+            var rs = stmt.executeQuery();
+            return rs.next() ? rs.getLong(1) : -1;
+        }
+    }
+    
+    private void insertEvent(Connection conn, String aggregateId, long version, DomainEvent event) throws SQLException {
+        try (var stmt = conn.prepareStatement(
+            "INSERT INTO events (aggregate_id, version, event_type, payload, occurred_at) VALUES (?, ?, ?, ?, ?)")) {
+            stmt.setString(1, aggregateId);
+            stmt.setLong(2, version);
+            stmt.setString(3, event.getClass().getSimpleName());
+            stmt.setString(4, serializeEvent(event)); // JSON
+            stmt.setTimestamp(5, Timestamp.from(event.occurredAt()));
+            stmt.executeUpdate();
+        }
     }
 }
 ```
@@ -224,6 +261,25 @@ public class OrderCommandHandler {
 
 ### Projeção (Read Model) em Postgres
 
+**Estrutura normalizada para consultas eficientes:**
+
+```sql
+-- Tabelas otimizadas para leitura
+CREATE TABLE orders_read_model (
+  order_id text PRIMARY KEY,
+  customer_id text NOT NULL,
+  payment_confirmed boolean NOT NULL DEFAULT false
+);
+
+CREATE TABLE order_items (
+  order_id text NOT NULL,
+  sku text NOT NULL,
+  qty int NOT NULL,
+  PRIMARY KEY (order_id, sku),
+  FOREIGN KEY (order_id) REFERENCES orders_read_model(order_id)
+);
+```
+
 ```java
 public class OrdersProjection {
 
@@ -234,28 +290,20 @@ public class OrdersProjection {
     // Assinando o Event Bus
     public void on(OrderPlaced e) {
         jdbc.update("""
-          INSERT INTO orders_read_model(order_id, customer_id, items, payment_confirmed)
-          VALUES (?, ?, '[]'::jsonb, false)
+          INSERT INTO orders_read_model(order_id, customer_id, payment_confirmed)
+          VALUES (?, ?, false)
+          ON CONFLICT (order_id) DO NOTHING
         """, e.aggregateId(), e.customerId());
     }
 
     public void on(ItemAdded e) {
-        // atualiza array JSON com agregação por sku
+        // UPSERT: insere ou soma quantidade por SKU
         jdbc.update("""
-          UPDATE orders_read_model
-          SET items = jsonb_set(
-              COALESCE(items, '[]'::jsonb),
-              '{0}',
-              (
-                SELECT to_jsonb(t)
-                FROM (
-                  SELECT ?::text AS sku, ?::int AS qty
-                ) t
-              ),
-              true
-          )
-          WHERE order_id = ?
-        """, e.sku(), e.qty(), e.aggregateId());
+          INSERT INTO order_items(order_id, sku, qty)
+          VALUES (?, ?, ?)
+          ON CONFLICT (order_id, sku) 
+          DO UPDATE SET qty = order_items.qty + EXCLUDED.qty
+        """, e.aggregateId(), e.sku(), e.qty());
     }
 
     public void on(PaymentConfirmed e) {
@@ -563,11 +611,59 @@ public class TarifaObservability {
 
 ## Padrões essenciais
 
-- **Idempotência**: consumidores de eventos devem conseguir reaplicar o mesmo evento sem efeitos colaterais (use tabelas de `seen_events` com `event_id` e unique constraint).
-- **Versionamento otimista**: `expectedVersion = history.size()` no append evita "perder" concorrência.
-- **Rebuild**: para refazer um read model, limpe projeções e replay dos eventos a partir do event store.
-- **Eventos como contratos**: eventos são públicos dentro do domínio; quebre-os com cuidado (evolução/compatibilidade).
-- **Dead-letter**: guarde eventos que falharam na projeção e permita retries.
+### Idempotência e Ordenação
+
+**Idempotência**: Consumidores devem processar o mesmo evento múltiplas vezes sem efeitos colaterais.
+
+```java
+// Tabela para tracking de eventos processados
+CREATE TABLE applied_events (
+    event_id text PRIMARY KEY,
+    projection_name text NOT NULL,
+    applied_at timestamptz NOT NULL DEFAULT now()
+);
+
+@Component
+public class ExtratoProjection {
+    
+    @EventHandler
+    public void on(TarifaCharged event) {
+        // Verifica se já foi processado
+        if (wasAlreadyApplied(event.eventId(), "extrato")) {
+            return; // Idempotência
+        }
+        
+        // Processa o evento
+        jdbcTemplate.update("""
+            INSERT INTO extrato_conta (conta_id, data, tipo, valor, descricao)
+            VALUES (?, ?, 'DEBITO_TARIFA', ?, ?)
+        """, event.contaId(), event.occurredAt(), event.valorCobrado(), 
+             buildDescricao(event));
+        
+        // Marca como processado
+        markAsApplied(event.eventId(), "extrato");
+    }
+}
+```
+
+**Ordenação**: Use particionamento por `aggregateId` no message broker (Kafka) para manter ordem dentro do stream do agregado.
+
+```yaml
+# Kafka topic configuration
+spring:
+  kafka:
+    producer:
+      properties:
+        partitioner.class: org.apache.kafka.clients.producer.internals.DefaultPartitioner
+        # Eventos do mesmo agregado vão para a mesma partição
+```
+
+### Outros Padrões Críticos
+
+- **Versionamento otimista**: `expectedVersion = history.size()` no append evita condições de corrida entre comandos.
+- **Rebuild**: Para refazer um read model, limpe projeções e replay dos eventos a partir do event store.
+- **Eventos como contratos**: Eventos são públicos dentro do domínio; quebre-os com cuidado (evolução/compatibilidade).
+- **Dead-letter**: Guarde eventos que falharam na projeção e permita retries com backoff exponencial.
 
 ## Quando usar CQRS + ES
 

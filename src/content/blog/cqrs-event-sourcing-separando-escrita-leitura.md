@@ -92,14 +92,14 @@ Agora que você entendeu o conceito geral, vamos aos detalhes técnicos!
 
 ```mermaid
 flowchart LR
-    subgraph Write["📝 Write Side (CQRS + ES)"]
+    subgraph Write["Write Side (CQRS + ES)"]
         UIW[API - Commands] --> CH[Command Handler]
         CH --> V[Validações/Regra de Negócio]
         V --> ES[(Event Store)]
         ES --> EB[Event Bus/Log]
     end
 
-    subgraph Read["📖 Read Side"]
+    subgraph Read["Read Side"]
         EB --> P1[Projeção A<br/>SQL]
         EB --> P2[Projeção B<br/>NoSQL/Cache]
         P1 --> Q1[API - Queries]

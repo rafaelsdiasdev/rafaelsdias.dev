@@ -24,16 +24,16 @@ Imagine um banco com vários sistemas interconectados:
 
 **Sistema Bancário com Circuit Breaker:**
 
-🟢 **Estado NORMAL (CLOSED):**
+**Estado NORMAL (CLOSED):**
 - Serviços funcionando: todas as operações processam normalmente
 - Como um disjuntor "ligado" - energia flui livremente
 
-🔴 **Estado PROTEÇÃO (OPEN):**
+**Estado PROTEÇÃO (OPEN):**
 - Serviço falhando muito: Circuit Breaker "desarma"
 - Sistema usa fallbacks (cache, dados locais, valores padrão)
 - Como um disjuntor "desligado" - protege o resto do sistema
 
-🟡 **Estado TESTE (HALF-OPEN):**
+**Estado TESTE (HALF-OPEN):**
 - Após um tempo, testa se serviço voltou
 - Se funcionar: volta ao normal
 - Se falhar: volta à proteção
@@ -51,13 +51,13 @@ Imagine um banco com vários sistemas interconectados:
 
 ### Por que isso é crucial no banco?
 
-**🏦 Cenários reais:**
+**Cenários reais:**
 - **PIX instável**: Não pode derrubar TEDs e cartões
 - **SERASA fora do ar**: Não pode parar aprovação de empréstimos
 - **BACEN lento**: Não pode travar todas as operações
 - **Antifraude sobrecarregado**: Não pode bloquear todos os pagamentos
 
-**🛡️ Benefícios:**
+**Benefícios:**
 - **Isolamento**: Falha em um serviço não afeta outros
 - **Graceful degradation**: Sistema funciona mesmo com limitações
 - **Recuperação automática**: Volta ao normal quando possível
@@ -88,10 +88,10 @@ Um Circuit Breaker possui 3 estados fundamentais:
 
 ```mermaid
 flowchart TB
-    subgraph "🏦 Sistema Bancário Resiliente"
+    subgraph "Sistema Bancário Resiliente"
         CLIENT[Cliente App]
         
-        subgraph "🛡️ Camada de Proteção"
+        subgraph "Camada de Proteção"
             LB[Load Balancer]
             RL[Rate Limiter]
             CB_GATEWAY[Circuit Breaker Gateway]
@@ -111,13 +111,13 @@ flowchart TB
             ANTIFRAUDE[Antifraude API]
         end
         
-        subgraph "📋 Bulkheads (Isolamento)"
+        subgraph "Bulkheads (Isolamento)"
             POOL_PIX[Thread Pool PIX]
             POOL_TED[Thread Pool TED]
             POOL_CONSULTAS[Thread Pool Consultas]
         end
         
-        subgraph "💾 Fallbacks"
+        subgraph "Fallbacks"
             CACHE[Cache Local]
             DEFAULT_SCORES[Scores Padrão]
             OFFLINE_VALIDATION[Validação Offline]

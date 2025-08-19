@@ -12,30 +12,30 @@ pubDate: 'Jan 19 2025'
 
 Imagine que você tem um **sistema financeiro** que precisa:
 
-**⚡ Velocidade:**
+**Velocidade:**
 - Processar 1 milhão de transações PIX por segundo
 - Responder consultas em menos de 50ms
 - Executar regras de negócio complexas rapidamente
 
-**🔒 Confiabilidade:**
+**Confiabilidade:**
 - Nunca errar nos cálculos (dinheiro é sagrado!)
 - Logs detalhados para auditoria
 - Restart automático se algo der errado
 
-**📈 Escalabilidade:**
+**Escalabilidade:**
 - Funcionar no Black Friday (10x mais operações)
 - Adicionar novas funcionalidades facilmente
 - Suportar milhares de consultas simultâneas
 
 ### Java 8 vs Java 11+ para Sistemas Financeiros
 
-**🗓️ Java 8 (legado):**
+**Java 8 (legado):**
 - Como usar uma **calculadora antiga**
 - Funciona, mas é lenta e limitada
 - Código verboso para regras simples
 - Performance limitada
 
-**🚀 Java 11+ (moderno):**
+**Java 11+ (moderno):**
 - Como usar uma **calculadora científica moderna**
 - Muito mais rápida e inteligente
 - Código limpo e expressivo
@@ -43,25 +43,25 @@ Imagine que você tem um **sistema financeiro** que precisa:
 
 ### Spring Boot para Sistemas Bancários
 
-**🏗️ Sem Spring Boot:**
+**Sem Spring Boot:**
 - Como construir um prédio tijolo por tijolo
 - Configurar tudo manualmente: banco, segurança, logs
 - Muito trabalho antes de implementar a primeira funcionalidade
 
-**⚡ Com Spring Boot:**
+**Com Spring Boot:**
 - Como usar **blocos de LEGO prontos**
 - Configuração automática: database, APIs, monitoring
 - Foco total nas **regras de negócio**
 
 ### Analogia: Sistema Bancário
 
-**🏪 Sistema Tradicional (Java 8):**
+**Sistema Tradicional (Java 8):**
 - Processos manuais e burocráticos
 - Cálculos lentos e propensos a erro
 - Um sistema monolítico faz tudo
 - Gargalos nos horários de pico
 
-**🏪 Sistema Moderno (Java 11+ + Spring Boot):**
+**Sistema Moderno (Java 11+ + Spring Boot):**
 - Interface digital inteligente
 - Cálculos automáticos e precisos
 - Microsserviços especializados
@@ -69,10 +69,10 @@ Imagine que você tem um **sistema financeiro** que precisa:
 
 ### Por que isso importa?
 
-**💰 Receita**: Processamento mais rápido = mais operações = mais receita
-**🎯 Precisão**: Menos bugs = menos perda de dinheiro
-**📊 Insights**: Dados melhores = decisões de negócio mais inteligentes
-**🚀 Inovação**: Tempo economizado = foco em novas funcionalidades
+**Receita**: Processamento mais rápido = mais operações = mais receita
+**Precisão**: Menos bugs = menos perda de dinheiro
+**Insights**: Dados melhores = decisões de negócio mais inteligentes
+**Inovação**: Tempo economizado = foco em novas funcionalidades
 
 ## Conceitos técnicos
 
@@ -98,34 +98,34 @@ Java 11+ trouxe melhorias significativas:
 
 ```mermaid
 flowchart TB
-    subgraph "🏦 Sistema Bancário Java 11+ + Spring Boot"
-        subgraph "🌐 API Layer"
+    subgraph "Sistema Bancário Java 11+ + Spring Boot"
+        subgraph "API Layer"
             GATEWAY[API Gateway]
             CALC_API[Processing API]
             QUERY_API[Query API]
             ADMIN_API[Admin API]
         end
         
-        subgraph "⚙️ Business Layer"
+        subgraph "Business Layer"
             CALC_SERVICE[Calculation Service]
             RULES_ENGINE[Rules Engine]
             PRICING_SERVICE[Pricing Service]
             VALIDATION[Validation Service]
         end
         
-        subgraph "💾 Data Layer"
+        subgraph "Data Layer"
             BUSINESS_DB[(Business Database)]
             CACHE[Redis Cache]
             AUDIT_LOG[(Audit Log)]
         end
         
-        subgraph "📊 Observability"
+        subgraph "Observability"
             METRICS[Micrometer Metrics]
             TRACING[Distributed Tracing]
             LOGS[Structured Logs]
         end
         
-        subgraph "🔧 Infrastructure"
+        subgraph "Infrastructure"
             CONFIG[Config Server]
             DISCOVERY[Service Discovery]
             CIRCUIT_BREAKER[Circuit Breakers]
@@ -167,7 +167,7 @@ flowchart TB
 ### 1. Text Blocks para Queries Complexas
 
 ```java
-// ❌ Antes (Java 8) - SQL difícil de ler
+// Antes (Java 8) - SQL difícil de ler
 @Repository
 public class TarifaRepositoryOld {
     
@@ -185,7 +185,7 @@ public class TarifaRepositoryOld {
 ```
 
 ```java
-// ✅ Depois (Java 11+) - SQL legível e organizado
+// Depois (Java 11+) - SQL legível e organizado
 @Repository
 public class TarifaRepository {
     
@@ -209,7 +209,7 @@ public class TarifaRepository {
 ### 2. Records para DTOs Bancários
 
 ```java
-// ❌ Antes (Java 8) - Muito código boilerplate
+// Antes (Java 8) - Muito código boilerplate
 public class TarifaCalculationRequest {
     private final TipoOperacao operacao;
     private final BigDecimal valor;
@@ -232,7 +232,7 @@ public class TarifaCalculationRequest {
 ```
 
 ```java
-// ✅ Depois (Java 14+) - Código limpo e conciso
+// Depois (Java 14+) - Código limpo e conciso
 public record TarifaCalculationRequest(
     TipoOperacao operacao,
     BigDecimal valor,
@@ -274,7 +274,7 @@ public record TarifaCalculationResponse(
 ### 3. Pattern Matching para Regras de Negócio
 
 ```java
-// ❌ Antes (Java 8) - if/else verboso
+// Antes (Java 8) - if/else verboso
 @Service
 public class TarifaCalculatorOld {
     
@@ -300,7 +300,7 @@ public class TarifaCalculatorOld {
 ```
 
 ```java
-// ✅ Depois (Java 17+) - Pattern matching elegante
+// Depois (Java 17+) - Pattern matching elegante
 @Service
 public class TarifaCalculator {
     
@@ -338,7 +338,7 @@ public class TarifaCalculator {
 ### 4. HTTP Client Nativo para APIs Externas
 
 ```java
-// ❌ Antes (Java 8) - Dependência externa (Apache HttpClient)
+// Antes (Java 8) - Dependência externa (Apache HttpClient)
 @Service
 public class ValidadorCpfServiceOld {
     
@@ -359,7 +359,7 @@ public class ValidadorCpfServiceOld {
 ```
 
 ```java
-// ✅ Depois (Java 11+) - HTTP Client nativo
+// Depois (Java 11+) - HTTP Client nativo
 @Service
 public class ValidadorCpfService {
     
@@ -408,7 +408,7 @@ public class ValidadorCpfService {
 ### 5. Local Variable Type Inference (var)
 
 ```java
-// ❌ Antes (Java 8) - Tipos verbosos
+// Antes (Java 8) - Tipos verbosos
 @Service
 public class TarifaStatisticsServiceOld {
     
@@ -430,7 +430,7 @@ public class TarifaStatisticsServiceOld {
 ```
 
 ```java
-// ✅ Depois (Java 10+) - Código mais limpo com var
+// Depois (Java 10+) - Código mais limpo com var
 @Service
 public class TarifaStatisticsService {
     

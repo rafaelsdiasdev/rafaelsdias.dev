@@ -83,23 +83,23 @@ Em sistemas distribuídos bancários, temos múltiplos serviços independentes q
 
 ```mermaid
 flowchart TB
-    subgraph "🏦 Sistema Bancário Distribuído"
+    subgraph "Sistema Bancário Distribuído"
         API[API Gateway]
         
-        subgraph "⚡ Serviços Core"
+        subgraph "Serviços Core"
             CONTA[Serviço de Contas]
             CARTAO[Serviço de Cartões]
             NOTIF[Serviço de Notificações]
             FRAUD[Serviço Antifraude]
         end
         
-        subgraph "🔄 Coordenação"
+        subgraph "Coordenação"
             SAGA[Saga Orchestrator]
             OUTBOX[(Outbox Events)]
             DLQ[(Dead Letter Queue)]
         end
         
-        subgraph "📊 Observabilidade"
+        subgraph "Observabilidade"
             TRACE[Distributed Tracing]
             METRICS[Metrics Collection]
             LOGS[Centralized Logs]
@@ -248,23 +248,23 @@ sequenceDiagram
     API->>SAGA: CompraCartaoCommand
     
     SAGA->>AF: validar antifraude
-    AF-->>SAGA: ✅ aprovado (risk: 0.2)
+    AF-->>SAGA: aprovado (risk: 0.2)
     
     SAGA->>CARTAO: reservar limite R$ 1.500
-    CARTAO-->>SAGA: ✅ reservado (id: res-123)
+    CARTAO-->>SAGA: reservado (id: res-123)
     
     SAGA->>CONTA: registrar pendência
-    CONTA-->>SAGA: ❌ FALHA (sistema indisponível)
+    CONTA-->>SAGA: FALHA (sistema indisponível)
     
     Note over SAGA: Compensação iniciada
     
     SAGA->>CARTAO: liberar limite (res-123)
-    CARTAO-->>SAGA: ✅ limite liberado
+    CARTAO-->>SAGA: limite liberado
     
     SAGA->>AF: cancelar validação
-    AF-->>SAGA: ✅ cancelado
+    AF-->>SAGA: cancelado
     
-    SAGA-->>API: ❌ CompraRejeitada
+    SAGA-->>API: CompraRejeitada
     API-->>Cliente: Erro temporário, tente novamente
 ```
 
@@ -758,21 +758,21 @@ sequenceDiagram
     API->>SAGA: TransferenciaCommand
     
     SAGA->>ORIGEM: Debitar R$ 10.000
-    ORIGEM-->>SAGA: ✅ Debitado
+    ORIGEM-->>SAGA: Debitado
     
     SAGA->>DESTINO: Creditar R$ 10.000  
-    DESTINO-->>SAGA: ❌ FALHA (timeout)
+    DESTINO-->>SAGA: FALHA (timeout)
     
     Note over SAGA: Compensação iniciada
     
     SAGA->>ORIGEM: Estornar R$ 10.000
-    ORIGEM-->>SAGA: ✅ Estornado
+    ORIGEM-->>SAGA: Estornado
     
     SAGA->>NOTIF: Notificar falha
-    NOTIF-->>SAGA: ❌ FALHA (serviço down)
+    NOTIF-->>SAGA: FALHA (serviço down)
     
     SAGA->>DLQ: Mover notificação para DLQ
-    DLQ-->>SAGA: ✅ Armazenado
+    DLQ-->>SAGA: Armazenado
     
     SAGA-->>API: TransferenciaFalhou
     API-->>Cliente: Erro temporário, valor estornado

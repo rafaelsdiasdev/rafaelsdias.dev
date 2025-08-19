@@ -25,11 +25,11 @@ Imagine que você está fazendo um PIX de R$ 500:
 ### A Solução: Retry Inteligente
 
 **Sistema Moderno com Retry Inteligente:**
-- ⏱️ **1ª tentativa**: Processa PIX → Falha imediata
-- ⏱️ **2ª tentativa**: Espera 1 segundo → Tenta novamente
-- ⏱️ **3ª tentativa**: Espera 2 segundos → Nova tentativa
-- ⏱️ **4ª tentativa**: Espera 4 segundos → Mais uma tentativa
-- ⏱️ **5ª tentativa**: Espera 8 segundos → Última tentativa
+- **1ª tentativa**: Processa PIX → Falha imediata
+- **2ª tentativa**: Espera 1 segundo → Tenta novamente
+- **3ª tentativa**: Espera 2 segundos → Nova tentativa
+- **4ª tentativa**: Espera 4 segundos → Mais uma tentativa
+- **5ª tentativa**: Espera 8 segundos → Última tentativa
 
 **Resultado**: Sistemas têm tempo para "respirar" e a operação tem mais chance de dar certo!
 
@@ -37,17 +37,17 @@ Imagine que você está fazendo um PIX de R$ 500:
 
 É como ligar para o atendimento do banco:
 
-🔴 **Jeito Errado (sem backoff):**
+**Jeito Errado (sem backoff):**
 - 14:00:00 - Liga: "Todas as linhas ocupadas"
 - 14:00:01 - Liga: "Todas as linhas ocupadas"  
 - 14:00:02 - Liga: "Todas as linhas ocupadas"
 - Resultado: Você entope ainda mais as linhas!
 
-🟢 **Jeito Certo (com backoff):**
+**Jeito Certo (com backoff):**
 - 14:00:00 - Liga: "Todas as linhas ocupadas"
 - 14:01:00 - Liga: "Todas as linhas ocupadas"
 - 14:03:00 - Liga: "Todas as linhas ocupadas"
-- 14:07:00 - Liga: ✅ **"Olá, como posso ajudar?"**
+- 14:07:00 - Liga: **"Olá, como posso ajudar?""
 
 ### Tipos de "Espera Inteligente"
 
@@ -65,10 +65,10 @@ Imagine que você está fazendo um PIX de R$ 500:
 
 ### Por que isso é crucial no banco?
 
-- **🏦 PIX**: Milhões de transações simultâneas
+- **PIX**: Milhões de transações simultâneas
 - **💳 Cartão**: Validação em milissegundos com lojas
-- **📊 Consultas**: CPF no SERASA, SPC, BACEN
-- **🔄 Integrações**: Outros bancos, fintechs, marketplaces
+- **Consultas**: CPF no SERASA, SPC, BACEN
+- **Integrações**: Outros bancos, fintechs, marketplaces
 
 **Sem retry inteligente**: Sistemas colapsam em horários de pico
 **Com retry inteligente**: Operações funcionam mesmo sob pressão

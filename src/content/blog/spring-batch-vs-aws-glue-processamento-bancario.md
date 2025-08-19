@@ -40,70 +40,70 @@ Imagine um banco que processa milhões de transações por dia:
 ### Por que não fazer tudo em tempo real?
 
 **Problemas do tempo real:**
-- 🐌 **Muito lento**: Calcular juros de 10 milhões de contas demora horas
-- 💰 **Muito caro**: Manter sistemas potentes 24h custaria uma fortuna  
-- 🔄 **Conflitos**: Clientes usando conta enquanto calcula juros gera inconsistência
-- 📊 **Complexidade**: Relatórios precisam de dados "fotografados" em um momento específico
+- **Muito lento**: Calcular juros de 10 milhões de contas demora horas
+- **Muito caro**: Manter sistemas potentes 24h custaria uma fortuna  
+- **Conflitos**: Clientes usando conta enquanto calcula juros gera inconsistência
+- **Complexidade**: Relatórios precisam de dados "fotografados" em um momento específico
 
 **Vantagens do lote:**
-- ⚡ **Eficiente**: Processa milhões de registros em paralelo
-- 💸 **Econômico**: Usa recursos máximos só quando precisa
-- 🎯 **Consistente**: Dados não mudam durante o processamento
-- 📋 **Confiável**: Se falhar, reinicia de onde parou
+- **Eficiente**: Processa milhões de registros em paralelo
+- **Econômico**: Usa recursos máximos só quando precisa
+- **Consistente**: Dados não mudam durante o processamento
+- **Confiável**: Se falhar, reinicia de onde parou
 
 ### Cenários Bancários Reais
 
-**📅 Fechamento Diário:**
+**Fechamento Diário:**
 - Calcula saldos finais de todas as contas
 - Aplica juros de poupança e empréstimos
 - Gera extratos consolidados
 
-**🔄 Reconciliação:**
+**Reconciliação:**
 - Compara transações entre sistemas
 - Identifica discrepâncias entre cartões e contas
 - Verifica se PIX recebido confere com enviado
 
-**📊 Relatórios BACEN:**
+**Relatórios BACEN:**
 - SCR (Sistema de Informações de Crédito)
 - CCS (Cadastro de Clientes do Sistema Financeiro)
 - Dados de compliance e risco
 
 ## Spring Batch vs AWS Glue: A Batalha
 
-### 🏗️ Spring Batch (Java/On-Premises)
+### Spring Batch (Java/On-Premises)
 
 **O que é:**
-- Framework Java para processamento de tarifas em lote
+- Framework Java para processamento em lote
 - Roda na sua infraestrutura (servidores próprios)
-- Total controle sobre regras de cobrança e dados sensíveis
+- Total controle sobre regras de negócio e dados sensíveis
 
 **Analogia:**
-- Como ter um **departamento de cobrança próprio** no banco
-- Você controla tudo: regras de tarifa, cálculos, isenções
-- Precisa manter especialistas (desenvolvedores Java + analistas de tarifas)
+- Como ter um **departamento especializado próprio** no banco
+- Você controla tudo: regras, cálculos, processamento
+- Precisa manter especialistas (desenvolvedores Java + analistas)
 
-### ☁️ AWS Glue (Cloud/Serverless)
+### AWS Glue (Cloud/Serverless)
 
 **O que é:**
-- Serviço da Amazon para processamento de dados de tarifas
+- Serviço da Amazon para processamento de dados
 - Roda na nuvem, você só paga pelo processamento usado
 - Amazon cuida da infraestrutura de processamento
 
 **Analogia:**
-- Como terceirizar o **processamento de tarifas**
+- Como terceirizar o **processamento de dados**
 - Você define as regras, eles processam e entregam
 - Não precisa manter infraestrutura ou especialistas técnicos
 
 ### Quando usar cada um?
 
-**🏦 Use Spring Batch quando:**
+**Use Spring Batch quando:**
 - Dados de tarifas sensíveis que não podem sair do país
 - Compliance rígido (LGPD, BACEN) para dados financeiros
 - Equipe forte em Java + conhecimento de tarifas bancárias
 - Controle total sobre performance de cobrança
 - Integração com sistemas legados de tarifas
 
-**☁️ Use AWS Glue quando:**
+**Use AWS Glue quando:**
 - Dados de tarifas podem usar cloud pública
 - Quer focar nas regras de negócio, não infraestrutura
 - Dados já em S3, Redshift, ou outros serviços AWS
@@ -134,8 +134,8 @@ Ambas as soluções seguem padrões similares de processamento:
 
 ```mermaid
 flowchart TB
-    subgraph "🏦 Sistema de Tarifas Bancárias - Processamento Batch"
-        subgraph "📊 Fontes de Operações"
+    subgraph "Sistema Bancário - Processamento Batch"
+        subgraph "Fontes de Dados"
             PIX_OPS[Operações PIX]
             TED_OPS[Operações TED]
             CARD_OPS[Operações Cartão]
@@ -143,14 +143,14 @@ flowchart TB
             TRANSFER_OPS[Transferências]
         end
         
-        subgraph "⚙️ Spring Batch (On-Premises)"
+        subgraph "Spring Batch (On-Premises)"
             SB_SCHEDULER[Agendador Tarifas]
             SB_JOB_REPO[Repositório Jobs]
             SB_CALC[Cálculo Tarifas]
             SB_COBRANCA[Cobrança Batch]
         end
         
-        subgraph "☁️ AWS Glue (Cloud)"
+        subgraph "AWS Glue (Cloud)"
             GLUE_CATALOG[Catálogo Tarifas]
             GLUE_JOBS[Jobs Processamento]
             GLUE_CALC[Cálculo Distribuído]
@@ -163,7 +163,7 @@ flowchart TB
             LOCAL_TARIFAS[BD Tarifas Local]
         end
         
-        subgraph "📋 Outputs Tarifas"
+        subgraph "Outputs"
             TARIFA_REPORTS[Relatórios Receita]
             COBRANCA_FILES[Arquivos Cobrança]
             REVENUE_DASH[Dashboard Revenue]

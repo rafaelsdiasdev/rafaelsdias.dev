@@ -197,5 +197,3 @@ Em muitos cenários, as duas abordagens **coexistem**: orquestração para proce
 No próximo artigo, vou explorar como **CQRS + Event Sourcing** se conectam ao Saga Pattern e ajudam a manter consistência em sistemas distribuídos.
 
 ---
-
-*Tem experiência com Saga Pattern? Compartilhe nos comentários qual abordagem funciona melhor no seu contexto!*

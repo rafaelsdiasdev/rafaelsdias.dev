@@ -2,6 +2,7 @@
 title: 'Saga Pattern: Orquestração vs Coreografia'
 description: 'Comparação detalhada entre as duas abordagens do Saga Pattern para gerenciar transações distribuídas em microsserviços, com exemplos práticos e diagramas.'
 pubDate: '2025-01-02'
+tags: ['sistemas-distribuidos', 'sagas', 'arquitetura', 'microsservicos']
 ---
 
 ## Introdução

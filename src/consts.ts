@@ -3,7 +3,7 @@
 
 // Domain configuration - easier to switch between domains
 const IS_PRODUCTION = import.meta.env.PROD;
-const USE_CUSTOM_DOMAIN = false; // Set to true when custom domain is ready
+const USE_CUSTOM_DOMAIN = true; // Set to true when custom domain is ready
 
 export const SITE_DOMAIN = USE_CUSTOM_DOMAIN 
   ? 'rafaelsdias.dev' 

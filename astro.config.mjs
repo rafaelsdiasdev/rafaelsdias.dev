@@ -6,8 +6,8 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://rafaelsdiasdev.github.io',
-  base: '/rafaelsdias.dev',
+  site: 'https://rafaelsdias.dev',
+  base: '/',
   integrations: [mdx(), sitemap()],
   devToolbar: {
     enabled: false

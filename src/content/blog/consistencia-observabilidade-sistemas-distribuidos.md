@@ -1,35 +1,35 @@
 ---
-title: 'Consistência e Observabilidade em Operações de Tarifas Distribuídas'
-description: 'Sagas, Outbox Pattern e observabilidade para garantir consistência na cobrança de tarifas em sistemas distribuídos'
+title: 'Consistência e Observabilidade em Sistemas Distribuídos'
+description: 'Sagas, Outbox Pattern e observabilidade para garantir consistência e visibilidade em operações distribuídas complexas'
 pubDate: 'Jan 15 2025'
 ---
 
-# Consistência e Observabilidade em Operações de Tarifas Distribuídas
+# Consistência e Observabilidade em Sistemas Distribuídos
 
 ## Para quem está começando: explicação simples
 
-### Sistema de Tarifas Tradicional vs Distribuído
+### Sistema Tradicional vs Distribuído
 
-**Sistema de Tarifas Tradicional (tudo em um lugar):**
-- Um sistema gigante que calcula e cobra todas as tarifas: PIX, TED, cartões, saques
-- Se a cobrança falha, nenhuma tarifa é cobrada
-- Como ter um "departamento de cobrança" único para todos os tipos de operação
+**Sistema Tradicional (monolítico):**
+- Um sistema gigante que faz tudo: processa transações, calcula valores, atualiza contas
+- Se uma parte falha, tudo para
+- Como ter um "departamento único" para todas as operações
 
-**Sistema de Tarifas Moderno (distribuído):**
-- Vários sistemas especializados: um para tarifas PIX, outro para TED, outro para cartões
-- Mais rápido e escalável, mas surge um problema: como garantir que a cobrança seja consistente?
-- Como ter vários "departamentos de cobrança" cooperando sem perder receita
+**Sistema Moderno (distribuído):**
+- Vários sistemas especializados: um para pagamentos, outro para contas, outro para notificações
+- Mais rápido e escalável, mas surge um problema: como garantir que todos "conversem" direito?
+- Como ter vários "departamentos" cooperando sem perder informação
 
-### O Problema da Consistência na Cobrança
+### O Problema da Consistência
 
-Imagine que você fez uma compra de R$ 500 no cartão que deve gerar tarifa:
+Imagine que você fez uma compra de R$ 500 no cartão:
 
 1. Sistema de **Cartões** aprova a compra
-2. Sistema de **Tarifas** deveria calcular tarifa de R$ 3,50  
-3. Sistema de **Contas** deveria debitar R$ 503,50 (compra + tarifa)
-4. Sistema de **Receita** deveria registrar R$ 3,50 de receita
+2. Sistema de **Billing** deveria calcular taxas de R$ 3,50  
+3. Sistema de **Contas** deveria debitar R$ 503,50 (compra + taxas)
+4. Sistema de **Notificações** deveria te avisar por SMS
 
-**E se o sistema de Tarifas falhar?** Você tem uma compra sem cobrança de tarifa = PERDA DE RECEITA!
+**E se o sistema de Billing falhar?** Você tem uma compra aprovada mas sem as taxas cobradas = PROBLEMA!
 
 ### As Soluções
 

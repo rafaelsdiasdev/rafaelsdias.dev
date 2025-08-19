@@ -1,28 +1,27 @@
 ---
-title: 'Spring Batch vs AWS Glue: Processamento de Tarifas Bancárias em Lote'
-description: 'Comparação detalhada entre Spring Batch e AWS Glue para processamento de tarifas bancárias: cálculo, cobrança, reconciliação e relatórios de tarifas'
+title: 'Spring Batch vs AWS Glue: Processamento em Lote para Sistemas Bancários'
+description: 'Comparação detalhada entre Spring Batch e AWS Glue para processamento de dados bancários: cálculos, reconciliação e relatórios em larga escala'
 pubDate: 'Jan 18 2025'
 ---
 
-# Spring Batch vs AWS Glue: Processamento de Tarifas Bancárias em Lote
+# Spring Batch vs AWS Glue: Processamento em Lote para Sistemas Bancários
 
 ## Para quem está começando: explicação simples
 
-### O que é Processamento de Tarifas em Lote?
+### O que é Processamento em Lote no Banco?
 
-Imagine um banco que processa milhões de operações que geram tarifas por dia:
+Imagine um banco que processa milhões de transações por dia:
 
 **Durante o dia:**
-- Operações acontecem em tempo real: PIX, TED, cartões, saques
-- Cada operação pode gerar uma ou mais tarifas
-- Tarifas ficam "pendentes" esperando processamento
+- Transações acontecem em tempo real: PIX, TED, cartões, saques
+- Dados ficam "espalhados" em vários sistemas
+- Como peças de um quebra-cabeça dispersas
 
-**À noite (processamento em lote de tarifas):**
-- Sistema calcula todas as tarifas devidas do dia
-- Aplica regras de isenção (conta premium, promoções)
-- Cobra as tarifas nas contas dos clientes
-- Gera relatórios de receita de tarifas
-- Como um "departamento de cobrança" que organiza e cobra tudo durante a madrugada
+**À noite (processamento em lote):**
+- Sistema "organiza a casa" processando tudo junto
+- Calcula saldos finais, juros, taxas e comissões
+- Gera relatórios para BACEN, clientes, auditoria
+- Como uma equipe de limpeza que organiza tudo durante a madrugada
 
 ### Analogia: Restaurante com Sistema de Comissões
 
@@ -38,36 +37,36 @@ Imagine um banco que processa milhões de operações que geram tarifas por dia:
 - Gera relatório de pagamentos
 - Transfere comissões para folha de pagamento
 
-### Por que não cobrar tarifas em tempo real?
+### Por que não fazer tudo em tempo real?
 
 **Problemas do tempo real:**
-- 🐌 **Muito lento**: Calcular tarifas com regras complexas para 10 milhões de operações demora horas
-- 💰 **Muito caro**: Manter sistemas de tarifas potentes 24h custaria uma fortuna  
-- 🔄 **Conflitos**: Cliente fazendo operação enquanto cobra tarifa gera inconsistência
-- 📊 **Complexidade**: Relatórios de receita precisam de dados consolidados do dia
+- 🐌 **Muito lento**: Calcular juros de 10 milhões de contas demora horas
+- 💰 **Muito caro**: Manter sistemas potentes 24h custaria uma fortuna  
+- 🔄 **Conflitos**: Clientes usando conta enquanto calcula juros gera inconsistência
+- 📊 **Complexidade**: Relatórios precisam de dados "fotografados" em um momento específico
 
-**Vantagens do processamento em lote:**
-- ⚡ **Eficiente**: Processa milhões de tarifas em paralelo
-- 💸 **Econômico**: Usa recursos máximos só quando precisa (madrugada)
-- 🎯 **Consistente**: Aplica regras uniformes para todas as operações do dia
-- 📋 **Confiável**: Se falhar, reinicia de onde parou sem cobrar duplicado
+**Vantagens do lote:**
+- ⚡ **Eficiente**: Processa milhões de registros em paralelo
+- 💸 **Econômico**: Usa recursos máximos só quando precisa
+- 🎯 **Consistente**: Dados não mudam durante o processamento
+- 📋 **Confiável**: Se falhar, reinicia de onde parou
 
-### Cenários Reais de Processamento de Tarifas
+### Cenários Bancários Reais
 
-**📅 Cobrança Diária de Tarifas:**
-- Calcula tarifas de todas as operações do dia
-- Aplica regras de isenção e promoções
-- Cobra nas contas dos clientes
+**📅 Fechamento Diário:**
+- Calcula saldos finais de todas as contas
+- Aplica juros de poupança e empréstimos
+- Gera extratos consolidados
 
-**🔄 Reconciliação de Tarifas:**
-- Compara tarifas calculadas vs cobradas
-- Identifica divergências entre sistemas
-- Verifica se tarifa de PIX foi realmente cobrada
+**🔄 Reconciliação:**
+- Compara transações entre sistemas
+- Identifica discrepâncias entre cartões e contas
+- Verifica se PIX recebido confere com enviado
 
-**📊 Relatórios de Receita:**
-- Receita por tipo de tarifa (PIX, TED, cartão)
-- Análise de isenções concedidas
-- Dados para BACEN sobre tarifas cobradas
+**📊 Relatórios BACEN:**
+- SCR (Sistema de Informações de Crédito)
+- CCS (Cadastro de Clientes do Sistema Financeiro)
+- Dados de compliance e risco
 
 ## Spring Batch vs AWS Glue: A Batalha
 

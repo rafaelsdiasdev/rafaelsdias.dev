@@ -1,42 +1,42 @@
 ---
-title: 'Circuit Breaker: Proteção para Sistema de Cobrança de Tarifas'
-description: 'Como implementar Circuit Breaker, Bulkhead e Rate Limiting para proteger a cobrança de tarifas bancárias contra falhas em cascata'
+title: 'Circuit Breaker: Proteção Contra Falhas em Cascata'
+description: 'Como implementar Circuit Breaker, Bulkhead e Rate Limiting para proteger sistemas distribuídos contra falhas em cascata'
 pubDate: 'Jan 17 2025'
 ---
 
-# Circuit Breaker: Proteção para Sistema de Cobrança de Tarifas
+# Circuit Breaker: Proteção Contra Falhas em Cascata
 
 ## Para quem está começando: explicação simples
 
-### O Problema: O "Efeito Dominó" no Sistema de Tarifas
+### O Problema: O "Efeito Dominó" em Sistemas Distribuídos
 
-Imagine um banco com sistema de cobrança de tarifas:
+Imagine um banco com vários sistemas interconectados:
 
 **Cenário sem proteção:**
-- **Sistema de Tarifas PIX** está sobrecarregado (Black Friday)
-- **Cobrança de TED** depende da tabela de tarifas PIX
-- **Tarifas de Cartão** também consulta o mesmo sistema
-- **Resultado**: Tarifas PIX falha → TED sem cobrança → Cartões sem tarifa → PERDA DE RECEITA! 💥
+- **Sistema PIX** está sobrecarregado (Black Friday)
+- **Sistema TED** depende de validações do PIX
+- **Sistema Cartões** também consulta os mesmos serviços
+- **Resultado**: PIX falha → TED falha → Cartões falham → TUDO PARA! 💥
 
-É como um curto-circuito que para toda a cobrança de tarifas.
+É como um curto-circuito elétrico que queima toda a casa.
 
 ### A Solução: Circuit Breaker (Disjuntor Digital)
 
-**Sistema de Tarifas com Circuit Breaker:**
+**Sistema Bancário com Circuit Breaker:**
 
 🟢 **Estado NORMAL (CLOSED):**
-- Tabela de tarifas funcionando: todas as cobranças processam normalmente
-- Como um disjuntor "ligado" - tarifas fluem livremente
+- Serviços funcionando: todas as operações processam normalmente
+- Como um disjuntor "ligado" - energia flui livremente
 
 🔴 **Estado PROTEÇÃO (OPEN):**
-- Tabela de tarifas falhando: Circuit Breaker "desarma"
-- Sistema usa tarifas padrão em cache local
-- Como um disjuntor "desligado" - protege a receita do banco
+- Serviço falhando muito: Circuit Breaker "desarma"
+- Sistema usa fallbacks (cache, dados locais, valores padrão)
+- Como um disjuntor "desligado" - protege o resto do sistema
 
 🟡 **Estado TESTE (HALF-OPEN):**
-- Após um tempo, testa se tabela de tarifas voltou
-- Se funcionar: volta à cobrança normal
-- Se falhar: volta às tarifas padrão
+- Após um tempo, testa se serviço voltou
+- Se funcionar: volta ao normal
+- Se falhar: volta à proteção
 
 ### Analogia da Ponte com Pedágio
 

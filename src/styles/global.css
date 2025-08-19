@@ -958,6 +958,17 @@ mark {
   border-top: 1px solid var(--color-border);
 }
 
+.mobile-social-section {
+  text-align: center;
+}
+
+.mobile-social-title {
+  color: var(--color-text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+}
+
 /* Mobile theme toggle in header */
 .mobile-theme-toggle-header {
   display: none;
@@ -986,23 +997,28 @@ mark {
 
 .mobile-social-links {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   justify-content: center;
+  margin-top: 1rem;
 }
 
 .mobile-social-links a {
-  color: var(--color-text-muted);
-  padding: 0.75rem;
-  border-radius: 0.5rem;
+  color: var(--color-text-secondary);
+  padding: 1rem;
+  border-radius: 0.75rem;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
 }
 
 .mobile-social-links a:hover {
   color: var(--color-primary);
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-tertiary);
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
 }
 
 /* Show mobile menu button on small screens */

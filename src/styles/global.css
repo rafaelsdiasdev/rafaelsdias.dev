@@ -961,16 +961,7 @@ mark {
   border-top: 1px solid var(--color-border);
 }
 
-.mobile-social-section {
-  text-align: center;
-}
 
-.mobile-social-title {
-  color: var(--color-text-primary);
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0 0 1rem 0;
-}
 
 /* Mobile theme toggle in header */
 .mobile-theme-toggle-header {
@@ -1002,7 +993,6 @@ mark {
   display: flex;
   gap: 1.5rem;
   justify-content: center;
-  margin-top: 1rem;
 }
 
 .mobile-social-links a {

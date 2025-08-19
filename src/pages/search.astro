@@ -48,7 +48,7 @@ const posts = (await getCollection('blog')).sort(
 						<div class="posts-grid">
 							{posts.slice(0, 3).map((post) => (
 								<article class="post-card">
-									<a href={`${import.meta.env.BASE_URL}/blog/${post.id}/`} class="block">
+									<a href={`/blog/${post.id}/`} class="block">
 										<div class="post-meta mb-3">
 											<time class="post-date">
 												<FormattedDate date={post.data.pubDate} />

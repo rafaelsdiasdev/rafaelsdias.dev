@@ -23,11 +23,12 @@ const categories = [
 	{ id: 'sistemas-distribuidos', name: 'Sistemas Distribuídos', count: allPosts.filter(p => p.data.tags?.includes('sistemas-distribuidos')).length }
 ];
 
-// Filtrar posts por categoria (se especificada na URL)
-const category = Astro.url.searchParams.get('categoria') || 'todos';
-const posts = category === 'todos' 
-	? allPosts 
-	: allPosts.filter(post => post.data.tags?.includes(category));
+// Obter categoria inicial da URL
+const initialCategory = Astro.url.searchParams.get('categoria') || 'todos';
+console.log('URL completa:', Astro.url.href);
+console.log('Parâmetros da URL:', Object.fromEntries(Astro.url.searchParams.entries()));
+console.log('Categoria extraída:', Astro.url.searchParams.get('categoria'));
+console.log('Categoria inicial final:', initialCategory);
 ---
 
 <!doctype html>
@@ -52,47 +53,47 @@ const posts = category === 'todos'
 				<section class="mb-12">
 					<div class="categories-filter">
 						{categories.map((cat) => (
-							<a 
-								href={`/blog?categoria=${cat.id}`}
-								class={`category-tag ${category === cat.id ? 'active' : ''}`}
+							<button 
+								data-category={cat.id}
+								class={`category-tag ${initialCategory === cat.id ? 'active' : ''}`}
 							>
 								{cat.name}
 								<span class="category-count">({cat.count})</span>
-							</a>
+							</button>
 						))}
 					</div>
 				</section>
 
-				{posts.length === 0 ? (
-					<section class="text-center py-16">
-						<h2 class="section-title mb-4">Nenhum artigo publicado ainda</h2>
-						<p class="hero-description">Em breve novos artigos serão publicados aqui.</p>
+				{/* Container para posts filtrados */}
+				<div id="posts-container">
+					{/* Post em Destaque */}
+					<section class="mb-16" id="featured-post">
+						<h2 class="section-title mb-8">
+							Artigo em Destaque
+						</h2>
+						<PostCard post={allPosts[0]} featured={true} />
 					</section>
-				) : (
-					<>
-						{/* Post em Destaque */}
-						<section class="mb-16">
-							<h2 class="section-title mb-8">
-								Artigo em Destaque
-							</h2>
-							<PostCard post={posts[0]} featured={true} />
-						</section>
 
-						{/* Posts em Grid (excluindo o primeiro que já está em destaque) */}
-						{posts.length > 1 && (
-							<section class="mb-16">
-								<h2 class="section-title mb-8">
-									Outros Artigos
-								</h2>
-								<div class="posts-grid">
-									{posts.slice(1).map((post) => (
-										<PostCard post={post} />
-									))}
-								</div>
-							</section>
-						)}
-					</>
-				)}
+					{/* Posts em Grid */}
+					{allPosts.length > 1 && (
+						<section class="mb-16" id="other-posts">
+							<h2 class="section-title mb-8">
+								Outros Artigos
+							</h2>
+							<div class="posts-grid" id="posts-grid">
+								{allPosts.slice(1).map((post) => (
+									<PostCard post={post} />
+								))}
+							</div>
+						</section>
+					)}
+				</div>
+
+				{/* Mensagem quando não há posts */}
+				<div id="no-posts-message" class="text-center py-16" style="display: none;">
+					<h2 class="section-title mb-4">Nenhum artigo encontrado</h2>
+					<p class="hero-description">Tente selecionar outra categoria.</p>
+				</div>
 
 				<section>
 					<h2 class="section-title mb-8">
@@ -115,7 +116,7 @@ const posts = category === 'todos'
 								Arquivo
 							</h3>
 							<p class="topic-description">
-								{posts.length} {posts.length === 1 ? 'artigo publicado' : 'artigos publicados'}
+								{allPosts.length} {allPosts.length === 1 ? 'artigo publicado' : 'artigos publicados'}
 							</p>
 						</div>
 						<div class="topic-card">
@@ -324,5 +325,183 @@ const posts = category === 'todos'
 			}
 		}
 		</style>
+
+		<script define:vars={{ allPosts, initialCategory }}>
+			// Dados dos posts
+			const allPostsData = allPosts.map(post => ({
+				id: post.id,
+				title: post.data.title,
+				description: post.data.description,
+				pubDate: post.data.pubDate,
+				tags: post.data.tags || []
+			}));
+
+			// Função para criar HTML de um post
+			function createPostHTML(post, isFeatured = false) {
+				const date = new Date(post.pubDate).toLocaleDateString('pt-BR', {
+					year: 'numeric',
+					month: 'short',
+					day: 'numeric'
+				});
+				
+				const cardClass = isFeatured ? 'featured-post' : 'post-card';
+				const titleClass = isFeatured ? 'featured-post-title mb-3' : 'post-title mb-3';
+				const descriptionClass = isFeatured ? 'featured-post-description' : 'post-description';
+				const dateClass = isFeatured ? 'featured-post-date' : 'post-date';
+				
+				const tagsHTML = post.tags && post.tags.length > 0 ? `
+					<div class="post-tags">
+						${post.tags.slice(0, 3).map(tag => `<span class="post-tag">${tag}</span>`).join('')}
+						${post.tags.length > 3 ? `<span class="post-tag-more">+${post.tags.length - 3}</span>` : ''}
+					</div>
+				` : '';
+				
+				const featuredCTA = isFeatured ? '<span class="featured-post-cta">Ler artigo completo →</span>' : '';
+				
+				return `
+					<article class="${cardClass}">
+						<a href="/blog/${post.id}/" class="block">
+							<div class="post-meta mb-3">
+								<time class="${dateClass}">${date}</time>
+							</div>
+							<h3 class="${titleClass}">${post.title}</h3>
+							<p class="${descriptionClass}">${post.description}</p>
+							${tagsHTML}
+							${featuredCTA}
+						</a>
+					</article>
+				`;
+			}
+
+			// Função para filtrar posts
+			function filterPosts(category) {
+				console.log('=== FILTRANDO ===', category);
+				
+				const postsContainer = document.getElementById('posts-container');
+				const noPostsMessage = document.getElementById('no-posts-message');
+				const featuredPost = document.getElementById('featured-post');
+				const otherPosts = document.getElementById('other-posts');
+				const postsGrid = document.getElementById('posts-grid');
+
+				if (!postsContainer || !noPostsMessage || !featuredPost || !otherPosts || !postsGrid) {
+					console.error('Elementos não encontrados');
+					return;
+				}
+
+				// Filtrar posts
+				const filteredPosts = category === 'todos' 
+					? allPostsData 
+					: allPostsData.filter(post => post.tags.includes(category));
+
+				console.log('Posts filtrados:', filteredPosts.length);
+				console.log('Posts encontrados:', filteredPosts.map(p => p.id));
+
+				// Atualizar estado dos botões
+				document.querySelectorAll('.category-tag').forEach(btn => {
+					btn.classList.remove('active');
+					if (btn.dataset.category === category) {
+						btn.classList.add('active');
+					}
+				});
+
+				// Mostrar/ocultar conteúdo
+				if (filteredPosts.length === 0) {
+					postsContainer.style.display = 'none';
+					noPostsMessage.style.display = 'block';
+				} else {
+					postsContainer.style.display = 'block';
+					noPostsMessage.style.display = 'none';
+
+					if (category === 'todos') {
+						// Estrutura original: destaque + grid
+						featuredPost.style.display = 'block';
+						otherPosts.style.display = 'block';
+						
+						// Primeiro post como destaque
+						const featuredHTML = createPostHTML(filteredPosts[0], true);
+						featuredPost.innerHTML = `
+							<h2 class="section-title mb-8">Artigo em Destaque</h2>
+							${featuredHTML}
+						`;
+						
+						// Outros posts no grid
+						if (filteredPosts.length > 1) {
+							const gridHTML = filteredPosts.slice(1).map(post => createPostHTML(post, false)).join('');
+							otherPosts.innerHTML = `
+								<h2 class="section-title mb-8">Outros Artigos</h2>
+								<div class="posts-grid" id="posts-grid">
+									${gridHTML}
+								</div>
+							`;
+						} else {
+							otherPosts.style.display = 'none';
+						}
+					} else {
+						// Filtro ativo: apenas grid uniforme
+						featuredPost.style.display = 'none';
+						otherPosts.style.display = 'block';
+						
+						const gridHTML = filteredPosts.map(post => createPostHTML(post, false)).join('');
+						const title = filteredPosts.length === 1 ? 'Artigo Filtrado' : 'Artigos Filtrados';
+						
+						otherPosts.innerHTML = `
+							<h2 class="section-title mb-8">${title}</h2>
+							<div class="posts-grid" id="posts-grid">
+								${gridHTML}
+							</div>
+						`;
+					}
+				}
+
+				// Atualizar URL
+				const url = new URL(window.location.href);
+				if (category === 'todos') {
+					url.searchParams.delete('categoria');
+				} else {
+					url.searchParams.set('categoria', category);
+				}
+				window.history.pushState({}, '', url);
+			}
+
+			// Adicionar event listeners
+			document.addEventListener('DOMContentLoaded', function() {
+				const buttons = document.querySelectorAll('.category-tag');
+				
+				buttons.forEach((btn) => {
+					btn.addEventListener('click', function(e) {
+						e.preventDefault();
+						const category = this.dataset.category;
+						if (category) {
+							filterPosts(category);
+						}
+					});
+				});
+
+				// Aplicar filtro inicial
+				console.log('=== INICIALIZAÇÃO DO BLOG ===');
+				console.log('Categoria inicial (servidor):', initialCategory);
+				console.log('URL atual (cliente):', window.location.href);
+				console.log('Parâmetros da URL (cliente):', new URLSearchParams(window.location.search).toString());
+				
+				// Verificar se há parâmetro na URL do cliente
+				const urlParams = new URLSearchParams(window.location.search);
+				const clientCategory = urlParams.get('categoria');
+				console.log('Categoria da URL (cliente):', clientCategory);
+				
+				// Usar a categoria do cliente se disponível, senão usar a do servidor
+				const finalCategory = clientCategory || initialCategory;
+				console.log('Categoria final:', finalCategory);
+				
+				if (finalCategory !== 'todos') {
+					console.log('Aplicando filtro inicial:', finalCategory);
+					setTimeout(() => {
+						console.log('Executando filtro inicial...');
+						filterPosts(finalCategory);
+					}, 500);
+				} else {
+					console.log('Nenhum filtro inicial para aplicar');
+				}
+			});
+		</script>
 	</body>
 </html>

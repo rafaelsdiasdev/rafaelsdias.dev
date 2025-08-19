@@ -1,42 +1,42 @@
 ---
-title: 'Circuit Breaker: Proteção e Resiliência em Sistemas Bancários'
-description: 'Como implementar Circuit Breaker, Bulkhead e Rate Limiting para proteger operações bancárias críticas contra falhas em cascata'
+title: 'Circuit Breaker: Proteção para Sistema de Cobrança de Tarifas'
+description: 'Como implementar Circuit Breaker, Bulkhead e Rate Limiting para proteger a cobrança de tarifas bancárias contra falhas em cascata'
 pubDate: 'Jan 17 2025'
 ---
 
-# Circuit Breaker: Proteção e Resiliência em Sistemas Bancários
+# Circuit Breaker: Proteção para Sistema de Cobrança de Tarifas
 
 ## Para quem está começando: explicação simples
 
-### O Problema: O "Efeito Dominó" no Sistema Bancário
+### O Problema: O "Efeito Dominó" no Sistema de Tarifas
 
-Imagine um banco com vários departamentos:
+Imagine um banco com sistema de cobrança de tarifas:
 
 **Cenário sem proteção:**
-- **Departamento PIX** está sobrecarregado (Black Friday)
-- **Departamento TED** tenta usar PIX para validações
-- **Departamento Cartões** também depende do PIX
-- **Resultado**: PIX falha → TED falha → Cartões falham → TUDO PARA! 💥
+- **Sistema de Tarifas PIX** está sobrecarregado (Black Friday)
+- **Cobrança de TED** depende da tabela de tarifas PIX
+- **Tarifas de Cartão** também consulta o mesmo sistema
+- **Resultado**: Tarifas PIX falha → TED sem cobrança → Cartões sem tarifa → PERDA DE RECEITA! 💥
 
-É como um curto-circuito elétrico que queima toda a casa.
+É como um curto-circuito que para toda a cobrança de tarifas.
 
 ### A Solução: Circuit Breaker (Disjuntor Digital)
 
-**Sistema Bancário com Circuit Breaker:**
+**Sistema de Tarifas com Circuit Breaker:**
 
 🟢 **Estado NORMAL (CLOSED):**
-- PIX funcionando: TED e Cartões usam normalmente
-- Como um disjuntor "ligado" - energia flui livremente
+- Tabela de tarifas funcionando: todas as cobranças processam normalmente
+- Como um disjuntor "ligado" - tarifas fluem livremente
 
 🔴 **Estado PROTEÇÃO (OPEN):**
-- PIX falhando muito: Circuit Breaker "desarma"
-- TED e Cartões usam fallbacks (cache, dados locais)
-- Como um disjuntor "desligado" - protege o resto da casa
+- Tabela de tarifas falhando: Circuit Breaker "desarma"
+- Sistema usa tarifas padrão em cache local
+- Como um disjuntor "desligado" - protege a receita do banco
 
 🟡 **Estado TESTE (HALF-OPEN):**
-- Após um tempo, testa se PIX voltou
-- Se funcionar: volta ao normal
-- Se falhar: volta à proteção
+- Após um tempo, testa se tabela de tarifas voltou
+- Se funcionar: volta à cobrança normal
+- Se falhar: volta às tarifas padrão
 
 ### Analogia da Ponte com Pedágio
 

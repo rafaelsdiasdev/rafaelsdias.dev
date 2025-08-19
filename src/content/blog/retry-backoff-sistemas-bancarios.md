@@ -1,36 +1,37 @@
 ---
-title: 'Retry com Backoff: Resiliência em Sistemas Bancários'
-description: 'Como implementar estratégias inteligentes de retry para garantir robustez em operações bancárias críticas'
+title: 'Retry com Backoff: Resiliência para APIs de Tarifas Bancárias'
+description: 'Como implementar estratégias inteligentes de retry para garantir robustez na consulta e cobrança de tarifas bancárias'
 pubDate: 'Jan 16 2025'
 ---
 
-# Retry com Backoff: Resiliência em Sistemas Bancários
+# Retry com Backoff: Resiliência para APIs de Tarifas Bancárias
 
 ## Para quem está começando: explicação simples
 
-### O Problema: Quando Sistemas "Ficam Ocupados"
+### O Problema: Quando API de Tarifas "Fica Ocupada"
 
-Imagine que você está no caixa eletrônico tentando fazer um PIX de R$ 500:
+Imagine que você está fazendo um PIX de R$ 500 e o sistema precisa consultar a tarifa:
 
-**Situação 1 - Sistema Sobrecarregado:**
-- Você aperta "confirmar"
-- Tela fica carregando... carregando...
-- "Erro temporário, tente novamente"
-- Você aperta "confirmar" de novo IMEDIATAMENTE
+**Situação 1 - API de Tarifas Sobrecarregada:**
+- Você aperta "confirmar PIX"
+- Sistema consulta: "Qual a tarifa para PIX R$ 500?"
+- API de tarifas fica carregando... carregando...
+- "Erro temporário na consulta de tarifa"
+- Sistema tenta de novo IMEDIATAMENTE
 - Erro de novo... e de novo... e de novo...
 
-**Problema**: Você está "bombardeando" o sistema que já está sobrecarregado!
+**Problema**: Sistema está "bombardeando" a API de tarifas que já está sobrecarregada!
 
-### A Solução: Retry Inteligente
+### A Solução: Retry Inteligente para Tarifas
 
-**Sistema Bancário Moderno com Retry Inteligente:**
-- ⏱️ **1ª tentativa**: Falha imediata
-- ⏱️ **2ª tentativa**: Espera 1 segundo, tenta de novo
-- ⏱️ **3ª tentativa**: Espera 2 segundos, tenta de novo
-- ⏱️ **4ª tentativa**: Espera 4 segundos, tenta de novo
-- ⏱️ **5ª tentativa**: Espera 8 segundos, tenta de novo
+**Sistema de Tarifas Moderno com Retry Inteligente:**
+- ⏱️ **1ª tentativa**: Consulta tarifa PIX → Falha imediata
+- ⏱️ **2ª tentativa**: Espera 1 segundo → Consulta tarifa novamente
+- ⏱️ **3ª tentativa**: Espera 2 segundos → Tenta buscar tarifa
+- ⏱️ **4ª tentativa**: Espera 4 segundos → Nova consulta de tarifa
+- ⏱️ **5ª tentativa**: Espera 8 segundos → Última tentativa
 
-**Resultado**: O sistema tem tempo para "respirar" e sua operação tem mais chance de dar certo!
+**Resultado**: API de tarifas tem tempo para "respirar" e a cobrança tem mais chance de dar certo!
 
 ### Analogia do Call Center
 

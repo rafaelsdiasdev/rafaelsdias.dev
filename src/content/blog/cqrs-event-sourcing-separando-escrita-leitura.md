@@ -74,7 +74,7 @@ Saldo atual = soma tudo = R$ 1.500
 ### Quando usar?
 
 **NÃO use para**: Lista de contatos, cadastro simples, blog pessoal  
-**SIM use para**: Sistema bancário, e-commerce grande, sistemas que precisam de auditoria rigorosa
+**SIM use para**: Sistema bancário, plataformas financeiras, sistemas que precisam de auditoria rigorosa
 
 > **Resumo**: É como ter um caderninho que nunca apaga nada (Event Sourcing) e balcões separados para operações rápidas e lentas (CQRS)
 
@@ -121,12 +121,12 @@ flowchart LR
 sequenceDiagram
     participant C as Cliente/API
     participant CH as Command Handler
-    participant AGG as Aggregate
+    participant CONTA as ContaBancaria
     participant ES as Event Store
     
-    C->>CH: PlaceOrderCommand
-    CH->>AGG: validações + regra
-    AGG-->>CH: DomainEvents
+    C->>CH: RealizarTransferenciaCommand
+    CH->>CONTA: validações + regras bancárias
+    CONTA-->>CH: DomainEvents
     CH->>ES: append(events)
     ES-->>CH: ok (offset/version)
 ```
@@ -139,13 +139,25 @@ sequenceDiagram
     participant PR as Projeção (Read Model)
     participant API as API - Queries
     
-    ES-->>PR: OrderPlaced, ItemAdded, PaymentConfirmed...
-    PR->>PR: atualiza/denormaliza tabelas
-    API->>PR: GET /orders?customerId=...
+    ES-->>PR: ContaAberta, TransferenciaRealizada, TarifaCobrada...
+    PR->>PR: atualiza extrato e saldos
+    API->>PR: GET /extrato?contaId=...
     PR-->>API: JSON (rápido, indexado)
 ```
 
 ## Exemplo prático em Java (sem framework específico)
+
+### Enums e Value Objects
+
+```java
+public enum TipoConta {
+    CORRENTE, POUPANCA, PREMIUM
+}
+
+public enum TipoTransferencia {
+    TED, DOC, PIX
+}
+```
 
 ### Eventos de domínio
 
@@ -153,62 +165,83 @@ sequenceDiagram
 public interface DomainEvent {
     String aggregateId();
     Instant occurredAt();
+    String userId(); // Para auditoria bancária
 }
 
-// Eventos
-public record OrderPlaced(String aggregateId, String customerId, Instant occurredAt) implements DomainEvent {}
-public record ItemAdded(String aggregateId, String sku, int qty, Instant occurredAt) implements DomainEvent {}
-public record PaymentConfirmed(String aggregateId, BigDecimal amount, Instant occurredAt) implements DomainEvent {}
+// Eventos bancários
+public record ContaAberta(String aggregateId, String clienteId, TipoConta tipo, Instant occurredAt, String userId) implements DomainEvent {}
+public record TransferenciaRealizada(String aggregateId, String contaDestino, BigDecimal valor, TipoTransferencia tipo, Instant occurredAt, String userId) implements DomainEvent {}
+public record TarifaCobrada(String aggregateId, String tarifaId, BigDecimal valor, String descricao, Instant occurredAt, String userId) implements DomainEvent {}
 ```
 
 ### Comandos
 
 ```java
-public interface Command {}
+public interface Command {
+    String userId(); // Para auditoria
+}
 
-public record PlaceOrder(String orderId, String customerId) implements Command {}
-public record AddItem(String orderId, String sku, int qty) implements Command {}
-public record ConfirmPayment(String orderId, BigDecimal amount) implements Command {}
+public record AbrirConta(String contaId, String clienteId, TipoConta tipo, String userId) implements Command {}
+public record RealizarTransferencia(String contaId, String contaDestino, BigDecimal valor, TipoTransferencia tipo, String userId) implements Command {}
+public record CobrarTarifa(String contaId, String tarifaId, BigDecimal valor, String descricao, String userId) implements Command {}
 ```
 
 ### Agregado com Event Sourcing
 
 ```java
-public class OrderAggregate {
+public class ContaBancaria {
 
-    private String orderId;
-    private String customerId;
-    private boolean paymentConfirmed;
-    private Map<String, Integer> items = new HashMap<>();
+    private String contaId;
+    private String clienteId;
+    private TipoConta tipoConta;
+    private BigDecimal saldo;
+    private boolean contaAtiva;
+    private List<String> transferenciasRealizadas = new ArrayList<>();
 
     // "Aplica" eventos para reconstruir estado
     public void apply(DomainEvent event) {
-        if (event instanceof OrderPlaced e) {
-            this.orderId = e.aggregateId();
-            this.customerId = e.customerId();
-        } else if (event instanceof ItemAdded e) {
-            items.merge(e.sku(), e.qty(), Integer::sum);
-        } else if (event instanceof PaymentConfirmed e) {
-            this.paymentConfirmed = true;
+        if (event instanceof ContaAberta e) {
+            this.contaId = e.aggregateId();
+            this.clienteId = e.clienteId();
+            this.tipoConta = e.tipo();
+            this.saldo = BigDecimal.ZERO;
+            this.contaAtiva = true;
+        } else if (event instanceof TransferenciaRealizada e) {
+            this.saldo = this.saldo.subtract(e.valor());
+            this.transferenciasRealizadas.add(e.contaDestino());
+        } else if (event instanceof TarifaCobrada e) {
+            this.saldo = this.saldo.subtract(e.valor());
         }
     }
 
-    // Regras de negócio que emitem novos eventos
-    public List<DomainEvent> placeOrder(String orderId, String customerId) {
-        if (this.orderId != null) throw new IllegalStateException("Order já existe");
-        return List.of(new OrderPlaced(orderId, customerId, Instant.now()));
+    // Regras de negócio bancário que emitem novos eventos
+    public List<DomainEvent> abrirConta(String contaId, String clienteId, TipoConta tipo, String userId) {
+        if (this.contaId != null) throw new IllegalStateException("Conta já existe");
+        return List.of(new ContaAberta(contaId, clienteId, tipo, Instant.now(), userId));
     }
 
-    public List<DomainEvent> addItem(String sku, int qty) {
-        if (paymentConfirmed) throw new IllegalStateException("Pagamento já confirmado");
-        if (qty <= 0) throw new IllegalArgumentException("qty > 0");
-        return List.of(new ItemAdded(orderId, sku, qty, Instant.now()));
+    public List<DomainEvent> realizarTransferencia(String contaDestino, BigDecimal valor, TipoTransferencia tipo, String userId) {
+        if (!contaAtiva) throw new IllegalStateException("Conta inativa");
+        if (saldo.compareTo(valor) < 0) throw new IllegalStateException("Saldo insuficiente");
+        if (valor.compareTo(BigDecimal.ZERO) <= 0) throw new IllegalArgumentException("Valor deve ser positivo");
+        
+        return List.of(new TransferenciaRealizada(contaId, contaDestino, valor, tipo, Instant.now(), userId));
     }
 
-    public List<DomainEvent> confirmPayment(BigDecimal amount) {
-        if (items.isEmpty()) throw new IllegalStateException("Sem itens");
-        if (paymentConfirmed) return List.of(); // idempotência simples
-        return List.of(new PaymentConfirmed(orderId, amount, Instant.now()));
+    public List<DomainEvent> cobrarTarifa(String tarifaId, BigDecimal valor, String descricao, String userId) {
+        if (!contaAtiva) throw new IllegalStateException("Conta inativa");
+        if (saldo.compareTo(valor) < 0) throw new IllegalStateException("Saldo insuficiente para tarifa");
+        
+        // Regra: Conta premium isenta de tarifas
+        if (isPremiumAccount()) {
+            return List.of(); // Sem cobrança
+        }
+        
+        return List.of(new TarifaCobrada(contaId, tarifaId, valor, descricao, Instant.now(), userId));
+    }
+    
+    private boolean isPremiumAccount() {
+        return tipoConta == TipoConta.PREMIUM || saldo.compareTo(new BigDecimal("50000.00")) >= 0;
     }
 }
 ```
@@ -285,105 +318,127 @@ public class JdbcEventStore implements EventStore {
 ### Command Handler (reconstitui → valida → persiste eventos)
 
 ```java
-public class OrderCommandHandler {
+public class ContaBancariaCommandHandler {
 
     private final EventStore eventStore;
     private final EventPublisher publisher; // Kafka/NATS/etc.
 
-    public OrderCommandHandler(EventStore eventStore, EventPublisher publisher) {
+    public ContaBancariaCommandHandler(EventStore eventStore, EventPublisher publisher) {
         this.eventStore = eventStore;
         this.publisher = publisher;
     }
 
-    public void handle(PlaceOrder cmd) {
-        var history = eventStore.load(cmd.orderId());
-        var agg = rebuild(history);
-        var newEvents = agg.placeOrder(cmd.orderId(), cmd.customerId());
-        eventStore.append(cmd.orderId(), history.size(), newEvents);
+    public void handle(AbrirConta cmd) {
+        var history = eventStore.load(cmd.contaId());
+        var conta = rebuild(history);
+        var newEvents = conta.abrirConta(cmd.contaId(), cmd.clienteId(), cmd.tipo(), cmd.userId());
+        eventStore.append(cmd.contaId(), history.size(), newEvents);
         publisher.publish(newEvents);
     }
 
-    public void handle(AddItem cmd) {
-        var history = eventStore.load(cmd.orderId());
-        var agg = rebuild(history);
-        var newEvents = agg.addItem(cmd.sku(), cmd.qty());
-        eventStore.append(cmd.orderId(), history.size(), newEvents);
+    public void handle(RealizarTransferencia cmd) {
+        var history = eventStore.load(cmd.contaId());
+        var conta = rebuild(history);
+        var newEvents = conta.realizarTransferencia(cmd.contaDestino(), cmd.valor(), cmd.tipo(), cmd.userId());
+        eventStore.append(cmd.contaId(), history.size(), newEvents);
         publisher.publish(newEvents);
     }
 
-    public void handle(ConfirmPayment cmd) {
-        var history = eventStore.load(cmd.orderId());
-        var agg = rebuild(history);
-        var newEvents = agg.confirmPayment(cmd.amount());
-        eventStore.append(cmd.orderId(), history.size(), newEvents);
+    public void handle(CobrarTarifa cmd) {
+        var history = eventStore.load(cmd.contaId());
+        var conta = rebuild(history);
+        var newEvents = conta.cobrarTarifa(cmd.tarifaId(), cmd.valor(), cmd.descricao(), cmd.userId());
+        eventStore.append(cmd.contaId(), history.size(), newEvents);
         publisher.publish(newEvents);
     }
 
-    private OrderAggregate rebuild(List<DomainEvent> history) {
-        var agg = new OrderAggregate();
-        history.forEach(agg::apply);
-        return agg;
+    private ContaBancaria rebuild(List<DomainEvent> history) {
+        var conta = new ContaBancaria();
+        history.forEach(conta::apply);
+        return conta;
     }
 }
 ```
 
 ### Projeção (Read Model) em Postgres
 
-**Estrutura normalizada para consultas eficientes:**
+**Estrutura normalizada para consultas bancárias eficientes:**
 
 ```sql
--- Tabelas otimizadas para leitura
-CREATE TABLE orders_read_model (
-  order_id text PRIMARY KEY,
-  customer_id text NOT NULL,
-  payment_confirmed boolean NOT NULL DEFAULT false
+-- Tabelas otimizadas para leitura bancária
+CREATE TABLE contas_read_model (
+  conta_id text PRIMARY KEY,
+  cliente_id text NOT NULL,
+  tipo_conta text NOT NULL,
+  saldo_atual decimal(15,2) NOT NULL DEFAULT 0,
+  conta_ativa boolean NOT NULL DEFAULT true,
+  data_abertura timestamptz NOT NULL
 );
 
-CREATE TABLE order_items (
-  order_id text NOT NULL,
-  sku text NOT NULL,
-  qty int NOT NULL,
-  PRIMARY KEY (order_id, sku),
-  FOREIGN KEY (order_id) REFERENCES orders_read_model(order_id)
+CREATE TABLE extrato_conta (
+  id serial PRIMARY KEY,
+  conta_id text NOT NULL,
+  data_transacao timestamptz NOT NULL,
+  tipo_operacao text NOT NULL,
+  valor decimal(15,2) NOT NULL,
+  descricao text NOT NULL,
+  saldo_apos decimal(15,2) NOT NULL,
+  FOREIGN KEY (conta_id) REFERENCES contas_read_model(conta_id)
 );
 ```
 
 ```java
-public class OrdersProjection {
+public class ContasProjection {
 
     private final JdbcTemplate jdbc;
 
-    public OrdersProjection(JdbcTemplate jdbc) { this.jdbc = jdbc; }
+    public ContasProjection(JdbcTemplate jdbc) { this.jdbc = jdbc; }
 
     // Assinando o Event Bus
-    public void on(OrderPlaced e) {
+    public void on(ContaAberta e) {
         jdbc.update("""
-          INSERT INTO orders_read_model(order_id, customer_id, payment_confirmed)
-          VALUES (?, ?, false)
-          ON CONFLICT (order_id) DO NOTHING
-        """, e.aggregateId(), e.customerId());
+          INSERT INTO contas_read_model(conta_id, cliente_id, tipo_conta, saldo_atual, data_abertura)
+          VALUES (?, ?, ?, 0, ?)
+          ON CONFLICT (conta_id) DO NOTHING
+        """, e.aggregateId(), e.clienteId(), e.tipo().name(), e.occurredAt());
     }
 
-    public void on(ItemAdded e) {
-        // UPSERT: insere ou soma quantidade por SKU
+    public void on(TransferenciaRealizada e) {
+        // Atualiza saldo da conta
+        BigDecimal novoSaldo = atualizarSaldo(e.aggregateId(), e.valor().negate());
+        
+        // Registra no extrato
         jdbc.update("""
-          INSERT INTO order_items(order_id, sku, qty)
-          VALUES (?, ?, ?)
-          ON CONFLICT (order_id, sku) 
-          DO UPDATE SET qty = order_items.qty + EXCLUDED.qty
-        """, e.aggregateId(), e.sku(), e.qty());
+          INSERT INTO extrato_conta(conta_id, data_transacao, tipo_operacao, valor, descricao, saldo_apos)
+          VALUES (?, ?, 'TRANSFERENCIA_ENVIADA', ?, ?, ?)
+        """, e.aggregateId(), e.occurredAt(), e.valor().negate(), 
+             "Transferência para conta " + e.contaDestino(), novoSaldo);
     }
 
-    public void on(PaymentConfirmed e) {
+    public void on(TarifaCobrada e) {
+        // Atualiza saldo da conta
+        BigDecimal novoSaldo = atualizarSaldo(e.aggregateId(), e.valor().negate());
+        
+        // Registra no extrato
         jdbc.update("""
-          UPDATE orders_read_model SET payment_confirmed = true
-          WHERE order_id = ?
-        """, e.aggregateId());
+          INSERT INTO extrato_conta(conta_id, data_transacao, tipo_operacao, valor, descricao, saldo_apos)
+          VALUES (?, ?, 'TARIFA', ?, ?, ?)
+        """, e.aggregateId(), e.occurredAt(), e.valor().negate(), e.descricao(), novoSaldo);
+    }
+    
+    private BigDecimal atualizarSaldo(String contaId, BigDecimal delta) {
+        jdbc.update("""
+          UPDATE contas_read_model 
+          SET saldo_atual = saldo_atual + ? 
+          WHERE conta_id = ?
+        """, delta, contaId);
+        
+        return jdbc.queryForObject("""
+          SELECT saldo_atual FROM contas_read_model WHERE conta_id = ?
+        """, BigDecimal.class, contaId);
     }
 }
 ```
-
-**Observação**: a projeção acima é propositalmente simples; na prática, você pode normalizar (tabelas `orders` e `order_items`) para consultas eficientes.
 
 ## Exemplo Completo: Cobrança de Tarifa Bancária
 
@@ -763,11 +818,20 @@ Exemplo minimalista de teste de comando:
 
 ```java
 @Test
-void shouldEmitOrderPlaced() {
-    var agg = new OrderAggregate();
-    var events = agg.placeOrder("o-1", "c-1");
+void shouldEmitContaAberta() {
+    var conta = new ContaBancaria();
+    var events = conta.abrirConta("conta-1", "cliente-1", TipoConta.CORRENTE, "admin");
     assertEquals(1, events.size());
-    assertTrue(events.get(0) instanceof OrderPlaced e && e.aggregateId().equals("o-1"));
+    assertTrue(events.get(0) instanceof ContaAberta e && e.aggregateId().equals("conta-1"));
+}
+
+@Test  
+void shouldRejectTransferenciaWithSaldoInsuficiente() {
+    var conta = new ContaBancaria();
+    conta.apply(new ContaAberta("conta-1", "cliente-1", TipoConta.CORRENTE, Instant.now(), "admin"));
+    
+    assertThrows(IllegalStateException.class, () -> 
+        conta.realizarTransferencia("conta-2", new BigDecimal("1000.00"), TipoTransferencia.TED, "admin"));
 }
 ```
 

@@ -1,34 +1,35 @@
 ---
-title: 'Consistência e Observabilidade em Sistemas Distribuídos Bancários'
-description: 'Sagas, Outbox Pattern e observabilidade para garantir consistência e visibilidade em operações bancárias distribuídas'
+title: 'Consistência e Observabilidade em Operações de Tarifas Distribuídas'
+description: 'Sagas, Outbox Pattern e observabilidade para garantir consistência na cobrança de tarifas em sistemas distribuídos'
 pubDate: 'Jan 15 2025'
 ---
 
-# Consistência e Observabilidade em Sistemas Distribuídos Bancários
+# Consistência e Observabilidade em Operações de Tarifas Distribuídas
 
 ## Para quem está começando: explicação simples
 
-### Sistema Bancário Tradicional vs Distribuído
+### Sistema de Tarifas Tradicional vs Distribuído
 
-**Sistema Bancário Tradicional (tudo em um lugar):**
-- Um sistema gigante que faz tudo: débito, crédito, transferências, cartões
-- Se uma parte falha, tudo para
-- Como ter um banco com apenas 1 caixa para milhões de clientes
+**Sistema de Tarifas Tradicional (tudo em um lugar):**
+- Um sistema gigante que calcula e cobra todas as tarifas: PIX, TED, cartões, saques
+- Se a cobrança falha, nenhuma tarifa é cobrada
+- Como ter um "departamento de cobrança" único para todos os tipos de operação
 
-**Sistema Bancário Moderno (distribuído):**
-- Vários sistemas menores especializados: um para contas, outro para cartões, outro para empréstimos
-- Mais rápido e confiável, mas surge um problema: como garantir que todos "conversem" direito?
-- Como ter vários bancos cooperando, mas cada um precisa saber o que o outro está fazendo
+**Sistema de Tarifas Moderno (distribuído):**
+- Vários sistemas especializados: um para tarifas PIX, outro para TED, outro para cartões
+- Mais rápido e escalável, mas surge um problema: como garantir que a cobrança seja consistente?
+- Como ter vários "departamentos de cobrança" cooperando sem perder receita
 
-### O Problema da Consistência
+### O Problema da Consistência na Cobrança
 
-Imagine que você fez uma compra de R$ 500 no cartão:
+Imagine que você fez uma compra de R$ 500 no cartão que deve gerar tarifa:
 
 1. Sistema de **Cartões** aprova a compra
-2. Sistema de **Contas** deveria debitar R$ 500
-3. Sistema de **Notificações** deveria te avisar
+2. Sistema de **Tarifas** deveria calcular tarifa de R$ 3,50  
+3. Sistema de **Contas** deveria debitar R$ 503,50 (compra + tarifa)
+4. Sistema de **Receita** deveria registrar R$ 3,50 de receita
 
-**E se o sistema de Contas falhar?** Você tem uma compra aprovada mas sem débito na conta!
+**E se o sistema de Tarifas falhar?** Você tem uma compra sem cobrança de tarifa = PERDA DE RECEITA!
 
 ### As Soluções
 

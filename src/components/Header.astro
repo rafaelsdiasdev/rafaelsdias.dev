@@ -98,6 +98,71 @@ import HeaderLink from './HeaderLink.astro';
 	</nav>
 </header>
 
+<script>
+	// Função para atualizar o estado ativo dos links de navegação
+	function updateActiveNavLink() {
+		const pathname = window.location.pathname;
+		const navLinks = document.querySelectorAll('.header-link');
+		
+		console.log('Atualizando links de navegação. Pathname:', pathname);
+		console.log('Links encontrados:', navLinks.length);
+		
+		if (navLinks.length === 0) {
+			console.log('Nenhum link encontrado, tentando novamente em 100ms...');
+			setTimeout(updateActiveNavLink, 100);
+			return;
+		}
+		
+		navLinks.forEach(link => {
+			const href = link.getAttribute('href');
+			// Normalizar paths para comparação (remover barra final se existir, mas manter / para home)
+			const normalizedHref = href === '/' ? '/' : (href.endsWith('/') ? href.slice(0, -1) : href);
+			const normalizedPathname = pathname === '/' ? '/' : (pathname.endsWith('/') ? pathname.slice(0, -1) : pathname);
+			
+			let isActive = false;
+			
+			if (normalizedHref === '/') {
+				// Para a home, só ativa se for exatamente a home
+				isActive = normalizedPathname === '/';
+			} else {
+				// Para outros links, ativa se for exato ou subpath
+				const exactMatch = normalizedHref === normalizedPathname;
+				const startsWithMatch = normalizedPathname.startsWith(normalizedHref + '/');
+				isActive = exactMatch || startsWithMatch;
+			}
+			
+			if (isActive) {
+				link.classList.add('active');
+			} else {
+				link.classList.remove('active');
+			}
+		});
+	}
+
+	// Executar com delay para garantir que os elementos estejam prontos
+	setTimeout(updateActiveNavLink, 50);
+
+	// Atualizar quando a URL muda (para filtros do blog)
+	window.addEventListener('popstate', updateActiveNavLink);
+
+	// Observar mudanças na URL (para history.pushState)
+	let currentUrl = window.location.href;
+	const observer = new MutationObserver(() => {
+		if (window.location.href !== currentUrl) {
+			currentUrl = window.location.href;
+			updateActiveNavLink();
+		}
+	});
+
+	observer.observe(document.body, {
+		childList: true,
+		subtree: true
+	});
+
+	// Atualizar também quando a página termina de carregar
+	window.addEventListener('load', updateActiveNavLink);
+</script>
+
 <!-- Mobile Menu Overlay -->
 <div id="mobile-menu" class="mobile-menu">
 	<div class="mobile-menu-content">

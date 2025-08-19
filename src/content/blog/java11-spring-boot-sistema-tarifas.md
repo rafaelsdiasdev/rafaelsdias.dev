@@ -1,36 +1,36 @@
 ---
-title: 'Java 11+ e Spring Boot: Sistema de Tarifas Bancárias Moderno'
-description: 'Como usar features modernas do Java 11+ e Spring Boot para construir um sistema de tarifas bancárias performático e escalável'
+title: 'Java 11+ e Spring Boot: Construindo Sistemas Bancários Modernos'
+description: 'Como usar features modernas do Java 11+ e Spring Boot para construir sistemas bancários performáticos e escaláveis'
 pubDate: 'Jan 19 2025'
 ---
 
-# Java 11+ e Spring Boot: Sistema de Tarifas Bancárias Moderno
+# Java 11+ e Spring Boot: Construindo Sistemas Bancários Modernos
 
 ## Para quem está começando: explicação simples
 
-### Por que Java 11+ para Tarifas Bancárias?
+### Por que Java 11+ para Sistemas Bancários?
 
-Imagine que você tem um **sistema de cobrança de tarifas** que precisa:
+Imagine que você tem um **sistema financeiro** que precisa:
 
 **⚡ Velocidade:**
-- Calcular tarifa de 1 milhão de PIX por segundo
-- Responder consulta de tarifa em menos de 50ms
-- Processar regras complexas rapidamente
+- Processar 1 milhão de transações PIX por segundo
+- Responder consultas em menos de 50ms
+- Executar regras de negócio complexas rapidamente
 
 **🔒 Confiabilidade:**
-- Nunca errar no cálculo (dinheiro é sagrado!)
+- Nunca errar nos cálculos (dinheiro é sagrado!)
 - Logs detalhados para auditoria
 - Restart automático se algo der errado
 
 **📈 Escalabilidade:**
 - Funcionar no Black Friday (10x mais operações)
-- Adicionar novas regras de tarifa facilmente
+- Adicionar novas funcionalidades facilmente
 - Suportar milhares de consultas simultâneas
 
-### Java 8 vs Java 11+ para Tarifas
+### Java 8 vs Java 11+ para Sistemas Financeiros
 
 **🗓️ Java 8 (legado):**
-- Como usar uma **calculadora antiga** para tarifas
+- Como usar uma **calculadora antiga**
 - Funciona, mas é lenta e limitada
 - Código verboso para regras simples
 - Performance limitada
@@ -39,82 +39,82 @@ Imagine que você tem um **sistema de cobrança de tarifas** que precisa:
 - Como usar uma **calculadora científica moderna**
 - Muito mais rápida e inteligente
 - Código limpo e expressivo
-- Performance otimizada para cálculos
+- Performance otimizada para cálculos complexos
 
-### Spring Boot para Tarifas
+### Spring Boot para Sistemas Bancários
 
 **🏗️ Sem Spring Boot:**
 - Como construir um prédio tijolo por tijolo
 - Configurar tudo manualmente: banco, segurança, logs
-- Muito trabalho antes de cobrar a primeira tarifa
+- Muito trabalho antes de implementar a primeira funcionalidade
 
 **⚡ Com Spring Boot:**
 - Como usar **blocos de LEGO prontos**
 - Configuração automática: database, APIs, monitoring
-- Foco total nas **regras de tarifas**
+- Foco total nas **regras de negócio**
 
-### Analogia: Lanchonete de Tarifas
+### Analogia: Sistema Bancário
 
-**🏪 Lanchonete Tradicional (Java 8):**
-- Cardápio escrito à mão
-- Calculadora manual para preços
-- Um atendente faz tudo sozinho
-- Fila gigante nos horários de pico
+**🏪 Sistema Tradicional (Java 8):**
+- Processos manuais e burocráticos
+- Cálculos lentos e propensos a erro
+- Um sistema monolítico faz tudo
+- Gargalos nos horários de pico
 
-**🏪 Lanchonete Moderna (Java 11+ + Spring Boot):**
-- Cardápio digital inteligente
-- Sistema automático de preços
-- Vários atendentes especializados
-- Autoscaling: mais atendentes quando precisa
+**🏪 Sistema Moderno (Java 11+ + Spring Boot):**
+- Interface digital inteligente
+- Cálculos automáticos e precisos
+- Microsserviços especializados
+- Autoscaling: mais recursos quando precisa
 
-### Por que isso importa para tarifas?
+### Por que isso importa?
 
-**💰 Receita**: Cálculo mais rápido = mais operações = mais receita
+**💰 Receita**: Processamento mais rápido = mais operações = mais receita
 **🎯 Precisão**: Menos bugs = menos perda de dinheiro
-**📊 Insights**: Dados melhores = decisões de pricing mais inteligentes
-**🚀 Inovação**: Tempo economizado = foco em novas regras de tarifas
+**📊 Insights**: Dados melhores = decisões de negócio mais inteligentes
+**🚀 Inovação**: Tempo economizado = foco em novas funcionalidades
 
 ## Conceitos técnicos
 
 ### Evolução do Java para Sistemas Financeiros
 
-Java 11+ trouxe melhorias significativas para sistemas de tarifas:
+Java 11+ trouxe melhorias significativas:
 
 **HTTP Client nativo**: Consultas a APIs externas sem dependências
-**Local Variable Type Inference**: Código mais limpo para regras de tarifas
-**Flight Recorder**: Profiling detalhado de performance de cálculos
+**Local Variable Type Inference**: Código mais limpo e legível
+**Flight Recorder**: Profiling detalhado de performance
 **Text Blocks**: Queries SQL mais legíveis
-**Pattern Matching**: Lógica de tarifas mais expressiva
-**Records**: DTOs imutáveis para dados de tarifas
+**Pattern Matching**: Lógica de negócio mais expressiva
+**Records**: DTOs imutáveis para transferência de dados
 
-### Spring Boot 3.x para Tarifas
+### Spring Boot 3.x
 
-**Native Compilation**: Startup ultra-rápido para microserviços de tarifas
-**Observability**: Métricas automáticas de performance de cobrança
-**Security**: Proteção para APIs de tarifas sensíveis
-**Data**: Integração simplificada com bancos de dados de tarifas
+**Native Compilation**: Startup ultra-rápido para microserviços
+**Observability**: Métricas automáticas de performance
+**Security**: Proteção robusta para APIs sensíveis
+**Data**: Integração simplificada com bancos de dados
 
-## Arquitetura: Sistema de Tarifas Moderno
+## Arquitetura: Sistema Bancário Moderno
 
 ```mermaid
 flowchart TB
-    subgraph "🏦 Sistema de Tarifas Java 11+ + Spring Boot"
+    subgraph "🏦 Sistema Bancário Java 11+ + Spring Boot"
         subgraph "🌐 API Layer"
             GATEWAY[API Gateway]
-            CALC_API[Cálculo Tarifas API]
-            QUERY_API[Consulta Tarifas API]
-            ADMIN_API[Admin Tarifas API]
+            CALC_API[Processing API]
+            QUERY_API[Query API]
+            ADMIN_API[Admin API]
         end
         
         subgraph "⚙️ Business Layer"
-            CALC_SERVICE[Tarifa Calculator]
+            CALC_SERVICE[Calculation Service]
             RULES_ENGINE[Rules Engine]
             PRICING_SERVICE[Pricing Service]
             VALIDATION[Validation Service]
         end
         
         subgraph "💾 Data Layer"
-            TARIFA_DB[(Tarifas Database)]
+            BUSINESS_DB[(Business Database)]
             CACHE[Redis Cache]
             AUDIT_LOG[(Audit Log)]
         end
@@ -144,8 +144,8 @@ flowchart TB
     CALC_SERVICE --> VALIDATION
     PRICING_SERVICE --> CACHE
     
-    CALC_SERVICE --> TARIFA_DB
-    PRICING_SERVICE --> TARIFA_DB
+    CALC_SERVICE --> BUSINESS_DB
+    PRICING_SERVICE --> BUSINESS_DB
     RULES_ENGINE --> AUDIT_LOG
     
     CALC_API --> METRICS
@@ -162,9 +162,9 @@ flowchart TB
     style METRICS fill:#fff3e0
 ```
 
-## Features Java 11+ Aplicadas a Tarifas
+## Features Java 11+ na Prática
 
-### 1. Text Blocks para Regras SQL
+### 1. Text Blocks para Queries Complexas
 
 ```java
 // ❌ Antes (Java 8) - SQL difícil de ler
@@ -206,7 +206,7 @@ public class TarifaRepository {
 }
 ```
 
-### 2. Records para DTOs de Tarifas
+### 2. Records para DTOs Bancários
 
 ```java
 // ❌ Antes (Java 8) - Muito código boilerplate
@@ -271,7 +271,7 @@ public record TarifaCalculationResponse(
 ) {}
 ```
 
-### 3. Pattern Matching para Regras de Tarifas
+### 3. Pattern Matching para Regras de Negócio
 
 ```java
 // ❌ Antes (Java 8) - if/else verboso
@@ -481,7 +481,7 @@ public class TarifaStatisticsService {
 }
 ```
 
-## Spring Boot 3.x para Tarifas
+## Spring Boot 3.x na Prática
 
 ### 1. API REST Moderna com Spring Boot
 
@@ -872,7 +872,7 @@ public class TarifaHealthController {
 
 ## Performance e Otimizações
 
-### 1. Caching Inteligente de Tarifas
+### 1. Caching Inteligente
 
 ```java
 @Service

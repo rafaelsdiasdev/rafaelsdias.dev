@@ -2,6 +2,7 @@
 title: 'Idempotência End-to-End: Garantindo Operações Seguras em Sistemas Distribuídos'
 description: 'Como implementar idempotência completa em sistemas bancários distribuídos: da API ao banco de dados, passando por mensageria e microserviços'
 pubDate: 'Jan 20 2025'
+tags: ['resiliencia', 'idempotencia', 'sistemas-distribuidos', 'microservicos', 'api-design']
 ---
 
 # Idempotência End-to-End: Garantindo Operações Seguras em Sistemas Distribuídos

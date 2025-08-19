@@ -6,9 +6,28 @@ import PostCard from '../../components/PostCard.astro';
 import Header from '../../components/Header.astro';
 import { SITE_TITLE } from '../../consts';
 
-const posts = (await getCollection('blog')).sort(
+const allPosts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+// Extrair todas as tags únicas dos posts
+const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))];
+
+// Categorias principais
+const categories = [
+	{ id: 'todos', name: 'Todos os Artigos', count: allPosts.length },
+	{ id: 'arquitetura', name: 'Arquitetura de Sistemas', count: allPosts.filter(p => p.data.tags?.includes('arquitetura')).length },
+	{ id: 'resiliencia', name: 'Resiliência e Performance', count: allPosts.filter(p => p.data.tags?.includes('resiliencia')).length },
+	{ id: 'processamento-dados', name: 'Processamento de Dados', count: allPosts.filter(p => p.data.tags?.includes('processamento-dados')).length },
+	{ id: 'java', name: 'Tecnologias Java', count: allPosts.filter(p => p.data.tags?.includes('java')).length },
+	{ id: 'sistemas-distribuidos', name: 'Sistemas Distribuídos', count: allPosts.filter(p => p.data.tags?.includes('sistemas-distribuidos')).length }
+];
+
+// Filtrar posts por categoria (se especificada na URL)
+const category = Astro.url.searchParams.get('categoria') || 'todos';
+const posts = category === 'todos' 
+	? allPosts 
+	: allPosts.filter(post => post.data.tags?.includes(category));
 ---
 
 <!doctype html>
@@ -27,6 +46,21 @@ const posts = (await getCollection('blog')).sort(
 					<p class="blog-subtitle mb-8">
 						Artigos técnicos sobre arquitetura de software, microsserviços e sistemas distribuídos
 					</p>
+				</section>
+
+				{/* Filtros por Categoria */}
+				<section class="mb-12">
+					<div class="categories-filter">
+						{categories.map((cat) => (
+							<a 
+								href={`/blog?categoria=${cat.id}`}
+								class={`category-tag ${category === cat.id ? 'active' : ''}`}
+							>
+								{cat.name}
+								<span class="category-count">({cat.count})</span>
+							</a>
+						))}
+					</div>
 				</section>
 
 				{posts.length === 0 ? (
@@ -221,6 +255,53 @@ const posts = (await getCollection('blog')).sort(
 		.rss-link:hover {
 			background-color: var(--color-primary);
 			color: var(--color-text-inverse);
+		}
+		
+		.categories-filter {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.75rem;
+			justify-content: center;
+			margin-bottom: 2rem;
+		}
+		
+		.category-tag {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.5rem;
+			padding: 0.5rem 1rem;
+			border-radius: 2rem;
+			text-decoration: none;
+			font-weight: 500;
+			font-size: 0.875rem;
+			transition: all 200ms ease;
+			border: 1px solid var(--color-border);
+			background-color: var(--color-bg-primary);
+			color: var(--color-text-secondary);
+		}
+		
+		.category-tag:hover {
+			border-color: var(--color-primary);
+			color: var(--color-primary);
+			transform: translateY(-1px);
+		}
+		
+		.category-tag.active {
+			background-color: var(--color-primary);
+			color: var(--color-text-inverse);
+			border-color: var(--color-primary);
+		}
+		
+		.category-count {
+			background-color: rgba(255, 255, 255, 0.2);
+			padding: 0.125rem 0.5rem;
+			border-radius: 1rem;
+			font-size: 0.75rem;
+			font-weight: 600;
+		}
+		
+		.category-tag.active .category-count {
+			background-color: rgba(255, 255, 255, 0.3);
 		}
 		
 		@media (max-width: 768px) {

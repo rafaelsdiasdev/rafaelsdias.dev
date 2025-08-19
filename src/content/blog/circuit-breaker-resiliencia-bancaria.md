@@ -2,6 +2,7 @@
 title: 'Circuit Breaker: Proteção Contra Falhas em Cascata'
 description: 'Como implementar Circuit Breaker, Bulkhead e Rate Limiting para proteger sistemas distribuídos contra falhas em cascata'
 pubDate: 'Jan 17 2025'
+tags: ['resiliencia', 'circuit-breaker', 'bulkhead', 'rate-limiting', 'sistemas-distribuidos']
 ---
 
 # Circuit Breaker: Proteção Contra Falhas em Cascata

@@ -2,6 +2,7 @@
 title: 'Consistência e Observabilidade em Sistemas Distribuídos'
 description: 'Sagas, Outbox Pattern e observabilidade para garantir consistência e visibilidade em operações distribuídas complexas'
 pubDate: 'Jan 15 2025'
+tags: ['sistemas-distribuidos', 'consistencia', 'observabilidade', 'sagas', 'outbox-pattern']
 ---
 
 # Consistência e Observabilidade em Sistemas Distribuídos

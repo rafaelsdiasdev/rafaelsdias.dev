@@ -2,6 +2,7 @@
 title: 'Spring Batch vs AWS Glue: Processamento em Lote para Sistemas Bancários'
 description: 'Comparação detalhada entre Spring Batch e AWS Glue para processamento de dados bancários: cálculos, reconciliação e relatórios em larga escala'
 pubDate: 'Jan 18 2025'
+tags: ['processamento-dados', 'spring-batch', 'aws-glue', 'etl', 'java', 'cloud']
 ---
 
 # Spring Batch vs AWS Glue: Processamento em Lote para Sistemas Bancários

@@ -8,6 +8,7 @@ interface Props {
       title: string;
       description: string;
       pubDate: Date;
+      tags?: string[];
     };
   };
   featured?: boolean;
@@ -30,6 +31,19 @@ const cardClass = featured ? 'featured-post' : 'post-card';
     <p class={featured ? 'featured-post-description' : 'post-description'}>
       {post.data.description}
     </p>
+    
+    {/* Tags */}
+    {post.data.tags && post.data.tags.length > 0 && (
+      <div class="post-tags">
+        {post.data.tags.slice(0, 3).map((tag) => (
+          <span class="post-tag">{tag}</span>
+        ))}
+        {post.data.tags.length > 3 && (
+          <span class="post-tag-more">+{post.data.tags.length - 3}</span>
+        )}
+      </div>
+    )}
+    
     {featured && (
       <span class="featured-post-cta">
         Ler artigo completo →

@@ -2,6 +2,7 @@
 title: 'CQRS + Event Sourcing: Separando Escrita e Leitura com Eventos'
 description: 'Implementação prática de CQRS e Event Sourcing em Java: comandos, consultas e eventos imutáveis para sistemas distribuídos complexos.'
 pubDate: 'Jan 3 2025'
+tags: ['arquitetura', 'cqrs', 'event-sourcing', 'sistemas-distribuidos', 'java']
 ---
 
 ## Introdução

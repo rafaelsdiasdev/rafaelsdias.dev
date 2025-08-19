@@ -60,38 +60,61 @@ const posts = (await getCollection('blog')).sort(
 						Áreas de Especialização
 					</h2>
 					<div class="topics-grid">
-						<div class="topic-card">
+						<a href="/blog?categoria=arquitetura" class="topic-card">
 							<h3 class="topic-title">
-								Arquitetura de Microsserviços
+								Arquitetura de Sistemas
 							</h3>
 							<p class="topic-description">
-								Patterns, estratégias e lições aprendidas
+								CQRS, Event Sourcing e padrões arquiteturais
 							</p>
-						</div>
-						<div class="topic-card">
+							<span class="topic-count">
+								{posts.filter(p => p.data.tags?.includes('arquitetura')).length} artigos
+							</span>
+						</a>
+						<a href="/blog?categoria=sistemas-distribuidos" class="topic-card">
 							<h3 class="topic-title">
 								Sistemas Distribuídos
 							</h3>
 							<p class="topic-description">
-								Consistência, disponibilidade e particionamento
+								Consistência, observabilidade e Sagas
 							</p>
-						</div>
-						<div class="topic-card">
+							<span class="topic-count">
+								{posts.filter(p => p.data.tags?.includes('sistemas-distribuidos')).length} artigos
+							</span>
+						</a>
+						<a href="/blog?categoria=resiliencia" class="topic-card">
 							<h3 class="topic-title">
-								Performance & Escalabilidade
+								Resiliência e Performance
 							</h3>
 							<p class="topic-description">
-								Otimização e escalabilidade de sistemas
+								Circuit Breaker, Retry e Idempotência
 							</p>
-						</div>
-						<div class="topic-card">
+							<span class="topic-count">
+								{posts.filter(p => p.data.tags?.includes('resiliencia')).length} artigos
+							</span>
+						</a>
+						<a href="/blog?categoria=processamento-dados" class="topic-card">
 							<h3 class="topic-title">
-								DevOps & Infrastructure
+								Processamento de Dados
 							</h3>
 							<p class="topic-description">
-								CI/CD, containerização e cloud
+								Spring Batch, AWS Glue e ETL
 							</p>
-						</div>
+							<span class="topic-count">
+								{posts.filter(p => p.data.tags?.includes('processamento-dados')).length} artigos
+							</span>
+						</a>
+						<a href="/blog?categoria=java" class="topic-card">
+							<h3 class="topic-title">
+								Tecnologias Java
+							</h3>
+							<p class="topic-description">
+								Java 11+, Spring Boot e modernização
+							</p>
+							<span class="topic-count">
+								{posts.filter(p => p.data.tags?.includes('java')).length} artigos
+							</span>
+						</a>
 					</div>
 				</section>
 			</div>
@@ -117,6 +140,17 @@ const posts = (await getCollection('blog')).sort(
 			color: var(--color-text-secondary);
 			font-weight: 400;
 			margin: 0;
+		}
+		
+		.topic-count {
+			display: inline-block;
+			margin-top: 0.75rem;
+			padding: 0.25rem 0.75rem;
+			background-color: var(--color-primary);
+			color: var(--color-text-inverse);
+			border-radius: 1rem;
+			font-size: 0.75rem;
+			font-weight: 600;
 		}
 		
 		@media (max-width: 768px) {

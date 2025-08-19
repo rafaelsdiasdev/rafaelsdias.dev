@@ -1032,3 +1032,56 @@ mark {
     display: none;
   }
 }
+
+/* Post Tags Styles */
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.post-tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 200ms ease;
+}
+
+.post-tag:hover {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  border-color: var(--color-primary);
+}
+
+.post-tag-more {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-muted);
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Featured post tags */
+.featured-post .post-tags {
+  margin-top: 1.5rem;
+}
+
+.featured-post .post-tag {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-text-inverse);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.featured-post .post-tag:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}

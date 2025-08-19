@@ -2,6 +2,7 @@
 title: 'Retry com Backoff: Resiliência em Sistemas Distribuídos'
 description: 'Como implementar estratégias inteligentes de retry para garantir robustez em operações distribuídas críticas'
 pubDate: 'Jan 16 2025'
+tags: ['resiliencia', 'retry', 'backoff', 'sistemas-distribuidos', 'performance']
 ---
 
 # Retry com Backoff: Resiliência em Sistemas Distribuídos

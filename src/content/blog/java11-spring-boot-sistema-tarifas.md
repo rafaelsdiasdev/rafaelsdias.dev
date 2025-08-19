@@ -2,6 +2,7 @@
 title: 'Java 11+ e Spring Boot: Construindo Sistemas Bancários Modernos'
 description: 'Como usar features modernas do Java 11+ e Spring Boot para construir sistemas bancários performáticos e escaláveis'
 pubDate: 'Jan 19 2025'
+tags: ['java', 'spring-boot', 'tecnologias-modernas', 'performance', 'arquitetura']
 ---
 
 # Java 11+ e Spring Boot: Construindo Sistemas Bancários Modernos
